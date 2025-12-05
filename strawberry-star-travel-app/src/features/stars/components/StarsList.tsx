@@ -1,13 +1,12 @@
 import { stars } from "../data/stars";
 import type { Star } from "../types/Star";
+import StarItem from "./StarItem"
 
 function StarsList() {
   return (
     <ul>
       {stars.map((star: Star) => (
-        <li key={star.id}>
-          {star.name} — {star.distanceLy.toFixed(2)} light-years away
-        </li>
+        <StarItem key={star.id} star={star} />
       ))}
     </ul>
   );
