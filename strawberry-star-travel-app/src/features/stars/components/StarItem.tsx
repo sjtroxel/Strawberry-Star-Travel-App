@@ -6,9 +6,9 @@ interface StarItemProps {
 
 function StarItem({ star }: StarItemProps) {
     return (
-        <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-md border border-gray-700 m-2 max-w-sm mx-auto">
+        <div className="h-full flex flex-col bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-md border border-gray-700 m-2 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
             <h2 className="text-xl font-bold text-yellow-300 mb-2">{star.name}</h2>
-            <ul className="text-gray-200 text-sm space-y-1">
+            <ul className="text-gray-200 text-sm space-y-1 flex-1">
                 <li><span className="font-semibold">Designation:</span> {star.designation}</li>
                 <li><span className="font-semibold">Spectral Type:</span> {star.spectralType}</li>
                 <li><span className="font-semibold">Distance:</span> {star.distanceLy.toFixed(2)} light-years</li>
