@@ -8,5 +8,5 @@ export interface Star {
   rightAscension?: string;          // Optional - useful if an API gives it
   declination?: string;             // Optional - useful if an API gives it
   apparentMagnitude?: number;       // Brightness as seen from Earth
-  image?: string;                   // Optional image (you can add later)
+  imageUrl?: string;                   // Optional image (you can add later)
 }
