@@ -33,12 +33,17 @@ export default function Navbar() {
           </>)}
 
            {user && (
+            <>
+             <Link to="/dashboard" className="hover:text-pink-300">
+                Dashboard
+            </Link>
             <button
               onClick={handleLogout}
               className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded"
             >
               Log Out
             </button>
+            </>
           )}
         </div>
       </div>

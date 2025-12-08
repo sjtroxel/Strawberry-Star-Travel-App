@@ -1,10 +1,12 @@
 import React from "react";
 import { supabase } from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const navigate = useNavigate();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -19,6 +21,11 @@ export default function Login() {
       setMessage(error.message);
     } else {
       setMessage("Login successful!");
+
+       // Redirect after 2 seconds
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 2000);
     }
   }
 

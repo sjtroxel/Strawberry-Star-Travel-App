@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StarsList from "./features/stars/components/StarsList";
+import Dashboard from "./features/dashboard/Dashboard";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 
@@ -30,6 +31,17 @@ function App() {
           </ProtectedRoute>
         } 
       />
+
+      {/* Dashboard page */}
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      
     </Routes>
      </div>
     </>
