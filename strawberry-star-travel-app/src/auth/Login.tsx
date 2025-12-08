@@ -23,8 +23,9 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-sm mx-auto p-4 bg-gray-900 text-white rounded-lg mt-10">
-      <h2 className="text-xl mb-4">Log In</h2>
+  <div className="flex justify-center items-center min-h-[calc(100vh-5rem)] pt-20">
+      <div className="max-w-sm w-full mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
+        <h2 className="text-xl font-bold mb-4 text-center">Log In</h2>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-3">
         <input
@@ -52,6 +53,7 @@ export default function Login() {
       </form>
 
       {message && <p className="mt-3 text-sm">{message}</p>}
+       </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 import StarsList from "./features/stars/components/StarsList";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
@@ -21,10 +22,12 @@ function App() {
       <Route 
         path="/browse-stars" 
         element={
+          <ProtectedRoute>
           <main>
             <h1>Browse Stars</h1>
             <StarsList />
           </main>
+          </ProtectedRoute>
         } 
       />
     </Routes>
