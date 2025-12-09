@@ -4,10 +4,13 @@ import { useUser } from "../../hooks/useUser";
 export default function Dashboard() {
   const { user } = useUser();
 
+  // Get username from Supabase metadata
+  const username = user?.user_metadata?.username;
+
   return (
     <div className="max-w-2xl mx-auto p-6 text-white">
       <h1 className="text-3xl font-bold mb-4">
-        Welcome, {user?.email || "traveler"}! ✨
+        Welcome, {username || "traveler"}! ✨
       </h1>
 
       <p className="text-lg mb-6">
