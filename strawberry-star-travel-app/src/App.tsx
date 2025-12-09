@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StarsList from "./features/stars/components/StarsList";
 import Dashboard from "./features/dashboard/Dashboard";
+import Profile from "./features/profile/Profile";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 
@@ -38,6 +39,16 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      
+      {/* Profile page */}
+      <Route 
+        path="/profile" 
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         } 
       />
