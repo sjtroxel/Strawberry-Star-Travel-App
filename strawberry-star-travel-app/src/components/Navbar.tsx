@@ -5,6 +5,7 @@ import { useUser } from "../hooks/useUser";
 export default function Navbar() {
   const { user } = useUser();
   const username = user?.user_metadata?.username;
+  const avatar = user?.user_metadata?.avatar;
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -20,12 +21,18 @@ export default function Navbar() {
             🌟 Strawberry Star Travel 🍓
           </Link>
 
-          {/* Greeting close to center */}
+          {/* Greeting + Mini-Avatar */}
           {user && (
             <span className="text-pink-300 font-semibold">
               Hello, {username || "traveler"}!
             </span>
           )}
+
+            <img
+                src={avatar || "https://via.placeholder.com/40?text=?"}
+                alt="avatar"
+                className="w-8 h-8 rounded-full object-cover border border-pink-300 shadow-sm"
+              />
         </div>
 
         {/* Right side — Navigation */}
