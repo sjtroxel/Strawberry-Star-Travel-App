@@ -20,6 +20,13 @@ function StarsList() {
   const [sortBy, setSortBy] = React.useState<"distanceLy" | "apparentMagnitude" | "name" | "spectralType" | null>(null);
   const [filterByType, setFilterByType] = React.useState<string | null>(null);
   const [starsToShow, setStarsToShow] = React.useState(50);
+  const [loading, setLoading] = React.useState(true);
+
+  // Turn off loading after a short delay
+  React.useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+    }, []); 
 
   // Dynamically get all spectral types from stars
   const spectralTypes = Array.from(new Set(stars.map(star => star.spectralType))).sort();
@@ -66,6 +73,13 @@ function StarsList() {
     setStarsToShow(prev => prev + 50);
   }
 
+  const handleReset = () => {
+    setSearchQuery("");
+    setFilterByType(null);
+    setSortBy(null);
+    setStarsToShow(50);
+  }
+
   return (
     <div className="p-4">
       {/* Controls */}
@@ -103,8 +117,37 @@ function StarsList() {
           <option value="name">Name</option>
           <option value="spectralType">Spectral Type</option>
         </select>
+
+      {/* Reset button */}
+        <button
+          onClick={handleReset}
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800"
+        >
+          Reset
+        </button>
       </div>
 
+      {/* Star Count */}
+      <div
+        className="text-gray-300 text-sm mb-3 opacity-0 animate-fadeIn"
+        style={{ animation: "fadeIn 0.6s forwards" }}
+      >
+        {filteredStars.length.toLocaleString()}{" "}
+        {filteredStars.length === 1 ? "star" : "stars"} found
+      </div>
+
+      {/* Skeleton Loading State */}
+        {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(9)].map((_, i) => (
+            <div
+              key={i}
+              className="h-32 bg-gray-700 animate-pulse rounded-md"
+            ></div>
+          ))}
+        </div>
+      ) : (
+        <>
       {/* Star grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
         {visibleStars.map((star: Star) => (
@@ -122,6 +165,8 @@ function StarsList() {
             Load More
           </button>
         </div>
+      )}
+      </>
       )}      
     </div>
   );
