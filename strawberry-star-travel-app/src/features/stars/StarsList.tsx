@@ -1,8 +1,11 @@
 import React from "react";
-import { stars } from "./stars";
 import type { Star } from "./Star";
 import StarItem from "./StarItem";
+import rawStars from "./data/stars.json"
 import Fuse from "fuse.js";
+
+// Typed stars array
+const stars: Star[] = rawStars as Star[]
 
 // Fuse.js setup for fuzzy search
 const fuse = new Fuse(stars, {
@@ -12,9 +15,11 @@ const fuse = new Fuse(stars, {
 
 function StarsList() {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [filteredStars, setFilteredStars] = React.useState<Star[]>(stars);
+  const [filteredStars, setFilteredStars] = React.useState<Star[]>([]);
+  const [visibleStars, setVisibleStars] = React.useState<Star[]>([]);
   const [sortBy, setSortBy] = React.useState<"distanceLy" | "apparentMagnitude" | "name" | "spectralType" | null>(null);
   const [filterByType, setFilterByType] = React.useState<string | null>(null);
+  const [starsToShow, setStarsToShow] = React.useState(50);
 
   // Dynamically get all spectral types from stars
   const spectralTypes = Array.from(new Set(stars.map(star => star.spectralType))).sort();
@@ -45,8 +50,21 @@ function StarsList() {
       });
     }
 
+    // Push unnamed stars to the end
+    updatedStars.sort((a, b) => {
+      const aHasName = a.name && a.name.trim() !== "";
+      const bHasName = b.name && b.name.trim() !== "";
+      return (aHasName === bHasName) ? 0 : aHasName ? -1 : 1;
+    });
+
     setFilteredStars(updatedStars);
-  }, [searchQuery, filterByType, sortBy]);
+    // Slice for pagination
+    setVisibleStars(updatedStars.slice(0, starsToShow)); // lazy load
+  }, [searchQuery, filterByType, sortBy, starsToShow]);
+
+  const handleLoadMore = () => {
+    setStarsToShow(prev => prev + 50);
+  }
 
   return (
     <div className="p-4">
@@ -89,10 +107,22 @@ function StarsList() {
 
       {/* Star grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
-        {filteredStars.map((star: Star) => (
+        {visibleStars.map((star: Star) => (
           <StarItem key={star.id} star={star} />
         ))}
       </div>
+
+      {/* Load More button */}
+      {visibleStars.length < filteredStars.length && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={handleLoadMore}
+            className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Load More
+          </button>
+        </div>
+      )}      
     </div>
   );
 }

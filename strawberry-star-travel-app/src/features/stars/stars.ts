@@ -1,4 +1,4 @@
-import type { Star } from "../types/Star";
+import type { Star } from "./Star";
 
 export const stars: Star[] = [
   {
