@@ -1,6 +1,6 @@
 import React from "react";
-import { stars } from "../data/stars";
-import type { Star } from "../types/Star";
+import { stars } from "./stars";
+import type { Star } from "./Star";
 import StarItem from "./StarItem";
 import Fuse from "fuse.js";
 

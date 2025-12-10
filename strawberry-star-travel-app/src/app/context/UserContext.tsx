@@ -1,6 +1,6 @@
 // src/context/UserContext.tsx
 import { createContext, useState, useEffect, type ReactNode } from "react";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../../supabaseClient";
 
 // Use Supabase's built-in type for the user instead of "any"
 import type { User } from "@supabase/supabase-js";
