@@ -1,15 +1,24 @@
+// import React from "react";
 import type { Star } from "./Star";
+import { useFavorites } from "../../hooks/useFavorites";
 
 interface StarItemProps {
     star: Star;
 }
 
 function StarItem({ star }: StarItemProps) {
+    const { addFavorite, removeFavorite, isFavorite } = useFavorites();
+
     const displayName = star.name && star.name.trim() !== "" ? star.name : "unnamed star";
     const nameClasses =
         star.name && star.name.trim() !== ""
             ? "text-xl font-bold text-yellow-300 mb-2"
             : "text-xl italic text-gray-400 mb-2";
+
+    const handleFavoriteClick = () => {
+        if (isFavorite(star.id)) removeFavorite(star.id);
+        else addFavorite(star);
+    };
 
     return (
         <div className="h-full flex flex-col bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-md border border-gray-700 m-2 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
@@ -30,6 +39,14 @@ function StarItem({ star }: StarItemProps) {
                     </li>
                 )}
             </ul>
+
+            {/* FAVORITE BUTTON */}
+            <button
+                onClick={handleFavoriteClick}
+                className="mt-3 px-3 py-1 bg-indigo-950 hover:bg-fuchsia-950 rounded-xl text-pink font-semibold"
+            >
+                {isFavorite(star.id) ? "Remove from Favorites" : "Add to Favorites"}
+            </button>
         </div>
     );
 }
