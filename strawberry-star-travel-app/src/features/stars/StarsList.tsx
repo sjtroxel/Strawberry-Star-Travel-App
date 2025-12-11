@@ -1,89 +1,46 @@
-import React from "react";
-import type { Star } from "./Star";
+// import React from "react";
+import { useStars } from "../../hooks/useStars";
 import StarItem from "./StarItem";
-import rawStars from "./data/stars.json"
-import Fuse from "fuse.js";
 
-// Typed stars array
-const stars: Star[] = rawStars as Star[]
+export default function StarsList() {
+  const {
+    loading,
+    visibleStars,
+    totalStars,
 
-// Fuse.js setup for fuzzy search
-const fuse = new Fuse(stars, {
-  keys: ["name", "designation", "spectralType", "constellation"],
-  threshold: 0.4, // adjust for sensitivity
-});
+    // filter values
+    searchQuery,
+    spectralTypeFilter,
+    constellationFilter,
+    magnitudeFilter,
 
-function StarsList() {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [filteredStars, setFilteredStars] = React.useState<Star[]>([]);
-  const [visibleStars, setVisibleStars] = React.useState<Star[]>([]);
-  const [sortBy, setSortBy] = React.useState<"distanceLy" | "apparentMagnitude" | "name" | "spectralType" | null>(null);
-  const [filterByType, setFilterByType] = React.useState<string | null>(null);
-  const [starsToShow, setStarsToShow] = React.useState(50);
-  const [loading, setLoading] = React.useState(true);
+    // option lists
+    spectralTypes,
+    constellations,
+    magnitudeOptions,
 
-  // Turn off loading after a short delay
-  React.useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
-    return () => clearTimeout(timer);
-    }, []); 
+    // sorting
+    sortBy,
 
-  // Dynamically get all spectral types from stars
-  const spectralTypes = Array.from(new Set(stars.map(star => star.spectralType))).sort();
+    // setters
+    setSearchQuery,
+    setSpectralTypeFilter,
+    setConstellationFilter,
+    setMagnitudeFilter,
+    setSortBy,
 
-  React.useEffect(() => {
-    let updatedStars = [...stars];
-
-    // Filter by spectral type
-    if (filterByType) {
-      updatedStars = updatedStars.filter(star => star.spectralType === filterByType);
-    }
-
-    // Fuzzy search
-    if (searchQuery) {
-      const fuseResults = fuse.search(searchQuery);
-      updatedStars = fuseResults.map(result => result.item);
-    }
-
-    // Sort
-    if (sortBy) {
-      updatedStars.sort((a, b) => {
-        const aVal = a[sortBy] ?? 0;
-        const bVal = b[sortBy] ?? 0;
-        if (typeof aVal === "string" && typeof bVal === "string") {
-          return aVal.localeCompare(bVal);
-        }
-        return (aVal as number) - (bVal as number);
-      });
-    }
-
-    // Push unnamed stars to the end
-    updatedStars.sort((a, b) => {
-      const aHasName = a.name && a.name.trim() !== "";
-      const bHasName = b.name && b.name.trim() !== "";
-      return (aHasName === bHasName) ? 0 : aHasName ? -1 : 1;
-    });
-
-    setFilteredStars(updatedStars);
-    // Slice for pagination
-    setVisibleStars(updatedStars.slice(0, starsToShow)); // lazy load
-  }, [searchQuery, filterByType, sortBy, starsToShow]);
-
-  const handleLoadMore = () => {
-    setStarsToShow(prev => prev + 50);
-  }
-
-  const handleReset = () => {
-    setSearchQuery("");
-    setFilterByType(null);
-    setSortBy(null);
-    setStarsToShow(50);
-  }
+    // pagination + reset
+    handleLoadMore,
+    handleReset,
+  } = useStars();
 
   return (
     <div className="p-4">
-      {/* Controls */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+
+      {/* ------------------- CONTROLS ------------------- */}
+      <div className="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">
+
+        {/* Search */}
         <input
           type="text"
           placeholder="Search stars..."
@@ -92,33 +49,77 @@ function StarsList() {
           className="p-2 rounded flex-1 text-black"
         />
 
+        {/* Spectral Type Filter */}
         <select
-          value={filterByType ?? ""}
-          onChange={(e) => setFilterByType(e.target.value || null)}
+          value={spectralTypeFilter ?? ""}
+          onChange={(e) => setSpectralTypeFilter(e.target.value || null)}
           className="p-2 rounded flex-1 text-black"
         >
-          <option value="">All Types</option>
-          {spectralTypes.map(type => (
-            <option key={type} value={type}>{type}</option>
+          <option value="">All Spectral Types</option>
+          {spectralTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
           ))}
         </select>
 
+        {/* Constellation Filter */}
         <select
-          value={sortBy ?? ""}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            const value = e.target.value as "distanceLy" | "apparentMagnitude" | "name" | "spectralType" | "";
-            setSortBy(value || null);
+          value={constellationFilter ?? ""}
+          onChange={(e) => setConstellationFilter(e.target.value || null)}
+          className="p-2 rounded flex-1 text-black"
+        >
+          <option value="">All Constellations</option>
+          {constellations.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+
+        {/* Magnitude Filter */}
+        <select
+          value={magnitudeFilter ?? ""}
+          onChange={(e) =>
+            setMagnitudeFilter(
+              e.target.value ? Number(e.target.value) : null
+            )
+          }
+          className="p-2 rounded flex-1 text-black"
+        >
+          <option value="">All Magnitudes</option>
+          {magnitudeOptions.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+
+        {/* Sorting */}
+        <select
+          value={sortBy ? `${sortBy.key}:${sortBy.direction}` : ""}
+          onChange={(e) => {
+            if (!e.target.value) return setSortBy(null);
+            const [key, direction] = e.target.value.split(":") as [
+              "distanceLy" | "apparentMagnitude" | "name" | "spectralType",
+              "asc" | "desc"
+            ];
+            setSortBy({ key, direction });
           }}
           className="p-2 rounded flex-1 text-black"
         >
           <option value="">No Sorting</option>
-          <option value="distanceLy">Distance</option>
-          <option value="apparentMagnitude">Brightness</option>
-          <option value="name">Name</option>
-          <option value="spectralType">Spectral Type</option>
+          <option value="distanceLy:asc">Distance ↑</option>
+          <option value="distanceLy:desc">Distance ↓</option>
+          <option value="apparentMagnitude:asc">Brightness ↑</option>
+          <option value="apparentMagnitude:desc">Brightness ↓</option>
+          <option value="name:asc">Name A–Z</option>
+          <option value="name:desc">Name Z–A</option>
+          <option value="spectralType:asc">Spectral Type A–Z</option>
+          <option value="spectralType:desc">Spectral Type Z–A</option>
         </select>
 
-      {/* Reset button */}
+        {/* Reset Button */}
         <button
           onClick={handleReset}
           className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800"
@@ -127,17 +128,17 @@ function StarsList() {
         </button>
       </div>
 
-      {/* Star Count */}
+      {/* ------------------- STAR COUNT TEXT ------------------- */}
       <div
         className="text-gray-300 text-sm mb-3 opacity-0 animate-fadeIn"
         style={{ animation: "fadeIn 0.6s forwards" }}
       >
-        {filteredStars.length.toLocaleString()}{" "}
-        {filteredStars.length === 1 ? "star" : "stars"} found
+        {totalStars.toLocaleString()}{" "}
+        {totalStars === 1 ? "star" : "stars"} found
       </div>
 
-      {/* Skeleton Loading State */}
-        {loading ? (
+      {/* ------------------- LOADING SKELETON ------------------- */}
+      {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(9)].map((_, i) => (
             <div
@@ -148,28 +149,26 @@ function StarsList() {
         </div>
       ) : (
         <>
-      {/* Star grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
-        {visibleStars.map((star: Star) => (
-          <StarItem key={star.id} star={star} />
-        ))}
-      </div>
+          {/* ------------------- STAR GRID ------------------- */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
+            {visibleStars.map((star) => (
+              <StarItem key={star.id} star={star} />
+            ))}
+          </div>
 
-      {/* Load More button */}
-      {visibleStars.length < filteredStars.length && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={handleLoadMore}
-            className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Load More
-          </button>
-        </div>
+          {/* ------------------- LOAD MORE ------------------- */}
+          {visibleStars.length < totalStars && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleLoadMore}
+                className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Load More
+              </button>
+            </div>
+          )}
+        </>
       )}
-      </>
-      )}      
     </div>
   );
 }
-
-export default StarsList;
