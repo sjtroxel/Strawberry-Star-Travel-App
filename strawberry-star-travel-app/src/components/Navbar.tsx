@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useUser } from "../hooks/useUser";
+import Strawberry from "../styles/Strawberry.png"
 
 export default function Navbar() {
   const { user } = useUser();
@@ -29,9 +30,10 @@ export default function Navbar() {
           )}
 
             <img
-                src={avatar || "https://via.placeholder.com/40?text=?"}
+                src={avatar || Strawberry}
                 alt="avatar"
-                className="w-8 h-8 rounded-full object-cover border border-pink-300 shadow-sm"
+                className="w-10 h-10 rounded-full object-cover border-2 border-pink-300 shadow-sm
+                transition-transform duration-300 hover:rotate-180"
               />
         </div>
 

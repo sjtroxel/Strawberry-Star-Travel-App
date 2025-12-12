@@ -1,6 +1,6 @@
-// import React from "react";
 import { useUser } from "../../hooks/useUser";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import Strawberry from "../../styles/Strawberry.png"
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -22,9 +22,11 @@ export default function Dashboard() {
             className="w-32 h-32 rounded-full object-cover border-4 border-pink-400 shadow-lg"
           />
         ) : (
-          <div className="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center text-3xl">
-            👤
-          </div>
+          <img
+            src={Strawberry}
+            alt="Default avatar"
+            className="w-32 h-32 rounded-full object-cover border-4 border-pink-400 shadow-lg"
+          />
         )}
 
         <h1 className="text-3xl font-bold mt-4">
@@ -65,7 +67,7 @@ export default function Dashboard() {
           <div className="bg-gray-900 p-4 rounded-xl shadow hover:bg-gray-700 transition cursor-pointer">
             <h2 className="text-xl font-semibold mb-2">💖 Favorites</h2>
             <p className="text-sm">
-              View all the stars you’ve marked as favorites and manage your personal collection.
+              View all the stars you've marked as favorites and manage your personal collection.
             </p>
           </div>
         </Link>
