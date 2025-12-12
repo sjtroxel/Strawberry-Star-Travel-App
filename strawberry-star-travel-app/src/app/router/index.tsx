@@ -6,6 +6,7 @@ import Navbar from "../../components/Navbar";
 import StarsList from "../../features/stars/StarsList";
 import Dashboard from "../../features/dashboard/Dashboard";
 import Profile from "../../features/profile/Profile";
+import Favorites from "../../features/favorites/Favorites";
 import Login from "../../auth/Login";
 import Signup from "../../auth/Signup";
 
@@ -54,6 +55,16 @@ export default function AppRouter() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Favorites */}
+          <Route
+            path="/favorites"
+            element={
+              <ProtectedRoute>
+                <Favorites />
               </ProtectedRoute>
             }
           />

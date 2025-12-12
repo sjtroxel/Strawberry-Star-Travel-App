@@ -60,6 +60,17 @@ export default function Dashboard() {
           </div>
         </Link>
 
+        {/* CLICKABLE FAVORITES CARD */}
+        <Link to="/favorites">
+          <div className="bg-gray-900 p-4 rounded-xl shadow hover:bg-gray-700 transition cursor-pointer">
+            <h2 className="text-xl font-semibold mb-2">💖 Favorites</h2>
+            <p className="text-sm">
+              View all the stars you’ve marked as favorites and manage your personal collection.
+            </p>
+          </div>
+        </Link>
+
+
       </div>
     </div>
   );

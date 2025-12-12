@@ -17,13 +17,13 @@ export default function Navbar() {
         
         {/* Left side — Logo + Greeting */}
         <div className="flex items-center gap-10">
-          <Link to="/" className="font-bold text-xl hover:text-pink-300">
+          <Link to="/" className="font-bold text-2xl hover:text-pink-300">
             🌟 Strawberry Star Travel 🍓
           </Link>
 
           {/* Greeting + Mini-Avatar */}
           {user && (
-            <span className="text-pink-300 font-semibold">
+            <span className="text-pink-300 text-sm font-semibold">
               Hello, {username || "traveler"}!
             </span>
           )}
