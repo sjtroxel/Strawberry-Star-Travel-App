@@ -1,6 +1,6 @@
-// import React from "react";
 import { useStars } from "../../hooks/useStars";
 import StarItem from "./StarItem";
+import { useFavorites } from "../../hooks/useFavorites";
 
 export default function StarsList() {
   const {
@@ -34,10 +34,12 @@ export default function StarsList() {
     handleReset,
   } = useStars();
 
+  const favorites = useFavorites();
+
   return (
     <div className="p-4">
 
-      {/* ------------------- CONTROLS ------------------- */}
+      {/* Controls */}
       <div className="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">
 
         {/* Search */}
@@ -128,7 +130,7 @@ export default function StarsList() {
         </button>
       </div>
 
-      {/* ------------------- STAR COUNT TEXT ------------------- */}
+      {/* Star Count Text */}
       <div
         className="text-gray-300 text-sm mb-3 opacity-0 animate-fadeIn"
         style={{ animation: "fadeIn 0.6s forwards" }}
@@ -137,7 +139,7 @@ export default function StarsList() {
         {totalStars === 1 ? "star" : "stars"} found
       </div>
 
-      {/* ------------------- LOADING SKELETON ------------------- */}
+      {/* Loading-Skeleton */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[...Array(9)].map((_, i) => (
@@ -149,14 +151,14 @@ export default function StarsList() {
         </div>
       ) : (
         <>
-          {/* ------------------- STAR GRID ------------------- */}
+          {/* Star Grid! */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
             {visibleStars.map((star) => (
-              <StarItem key={star.id} star={star} />
+              <StarItem key={star.id} star={star} favorites={favorites} />
             ))}
           </div>
 
-          {/* ------------------- LOAD MORE ------------------- */}
+          {/* Load More Button */}
           {visibleStars.length < totalStars && (
             <div className="flex justify-center mt-4">
               <button

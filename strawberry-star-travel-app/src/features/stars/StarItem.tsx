@@ -1,13 +1,18 @@
-// import React from "react";
 import type { Star } from "./Star";
-import { useFavorites } from "../../hooks/useFavorites";
 
 interface StarItemProps {
     star: Star;
+    favorites: {
+        addFavorite: (star: Star) => void;
+        removeFavorite: (id: number) => void;
+        isFavorite: (id: number) => boolean;
+        loading: boolean;
+        favorites: number[];
+    };
 }
 
-function StarItem({ star }: StarItemProps) {
-    const { addFavorite, removeFavorite, isFavorite } = useFavorites();
+function StarItem({ star, favorites }: StarItemProps) {
+    const { addFavorite, removeFavorite, isFavorite } = favorites;
 
     const displayName = star.name && star.name.trim() !== "" ? star.name : "unnamed star";
     const nameClasses =
