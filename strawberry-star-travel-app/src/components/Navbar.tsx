@@ -17,7 +17,7 @@ export default function Navbar() {
         
         {/* Left side — Logo + Greeting */}
         <div className="flex items-center gap-10">
-          <Link to="/" className="font-bold text-2xl hover:text-pink-300">
+          <Link to="/" className="font-bold text-3xl hover:text-pink-300">
             🌟 Strawberry Star Travel 🍓
           </Link>
 
