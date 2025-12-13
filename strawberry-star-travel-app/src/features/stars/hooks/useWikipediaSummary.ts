@@ -1,23 +1,30 @@
 import React from "react";
-import { fetchWikipediaSummary } from "../services/wikipedia";
+import { fetchStarWikipediaSummary } from "../services/wikipedia";
 import type { WikipediaSummary } from "../types/Wikipedia";
+import type { Star } from "../Star";
 
-export function useWikipediaSummary(starName?: string) {
+export function useWikipediaSummary(star: Star) {
   const [data, setData] = React.useState<WikipediaSummary | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
-    if (!starName) return;
+    if (!star) return;
+
+    const candidates = [
+      star.name ? `${star.name} star` : null,
+      star.name ?? null,
+      `HIP ${star.designation} star`,
+    ].filter(Boolean) as string[];
 
     setLoading(true);
     setError(false);
 
-    fetchWikipediaSummary(starName)
+    fetchStarWikipediaSummary(candidates)
       .then(setData)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, [starName]);
+  }, [star]);
 
   return { data, loading, error };
 }

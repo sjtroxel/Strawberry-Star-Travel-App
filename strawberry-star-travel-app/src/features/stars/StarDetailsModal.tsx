@@ -1,4 +1,5 @@
 import type { Star } from "./Star";
+import { useWikipediaSummary } from "./hooks/useWikipediaSummary";
 
 interface StarDetailsModalProps {
   star: Star;
@@ -11,6 +12,9 @@ export default function StarDetailsModal({
 }: StarDetailsModalProps) {
   const displayName =
     star.name && star.name.trim() !== "" ? star.name : "Unnamed Star";
+
+    // Wikipedia Lookup
+  const { data, loading, error } = useWikipediaSummary(star);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
@@ -63,9 +67,42 @@ export default function StarDetailsModal({
           />
         )}
 
-        {/* Phase 2 placeholder */}
-        <div className="mt-6 text-xs text-gray-400 italic">
-          More astronomical context coming soon ✨
+        {/* Wikipedia Section */}
+        <div className="mt-6 border-t border-gray-700 pt-4">
+          <h3 className="text-lg font-semibold text-pink-300 mb-2">
+            Astronomical Context
+          </h3>
+
+          {loading && (
+            <p className="text-sm text-gray-400 italic">
+              Fetching interstellar knowledge from Wikipedia…
+            </p>
+          )}
+
+          {error && (
+            <p className="text-sm text-gray-500 italic">
+              No Wikipedia article available for this star.
+            </p>
+          )}
+
+          {data && (
+            <>
+              <p className="text-sm text-gray-200 leading-relaxed">
+                {data.extract}
+              </p>
+
+              {data.content_urls?.desktop?.page && (
+                <a
+                  href={data.content_urls.desktop.page}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-3 text-sm text-pink-400 hover:text-pink-300 underline"
+                >
+                  Read more on Wikipedia →
+                </a>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
