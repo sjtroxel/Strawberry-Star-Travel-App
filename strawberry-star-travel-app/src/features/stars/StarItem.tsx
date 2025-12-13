@@ -1,4 +1,6 @@
+import React from "react";
 import type { Star } from "./Star";
+import StarDetailsModal from "./StarDetailsModal";
 
 interface StarItemProps {
     star: Star;
@@ -14,6 +16,8 @@ interface StarItemProps {
 function StarItem({ star, favorites }: StarItemProps) {
     const { addFavorite, removeFavorite, isFavorite } = favorites;
 
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+
     const displayName = star.name && star.name.trim() !== "" ? star.name : "unnamed star";
     const nameClasses =
         star.name && star.name.trim() !== ""
@@ -26,6 +30,7 @@ function StarItem({ star, favorites }: StarItemProps) {
     };
 
     return (
+      <>  
         <div className="h-full flex flex-col bg-white/10 backdrop-blur-md p-4 rounded-xl shadow-md border border-gray-700 m-2 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
             <h2 className={nameClasses}>{displayName}</h2>
             <ul className="text-gray-200 text-sm space-y-1 flex-1">
@@ -45,15 +50,40 @@ function StarItem({ star, favorites }: StarItemProps) {
                 )}
             </ul>
 
-            {/* FAVORITE BUTTON */}
-            <button
-                onClick={handleFavoriteClick}
-                className="mt-3 px-3 py-1 bg-indigo-950 hover:bg-fuchsia-950 rounded-xl text-pink font-semibold"
-            >
-                {isFavorite(star.id) ? "Remove from Favorites" : "Add to Favorites"}
-            </button>
+        {/* Action Buttons */}
+        <div className="mt-4 flex gap-2">
+          {/* Details */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="flex-1 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-sm font-semibold text-gray-200"
+          >
+            🔍 Details
+          </button>
+
+          {/* Favorite */}
+          <button
+            onClick={handleFavoriteClick}
+            className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition
+              ${
+                isFavorite(star.id)
+                  ? "bg-pink-700 hover:bg-pink-800 text-white"
+                  : "bg-indigo-900 hover:bg-indigo-800 text-pink-300"
+              }`}
+          >
+            {isFavorite(star.id) ? "💔 Remove" : "💖 Save"}
+          </button>
         </div>
-    );
-}
+      </div>
+
+          {/* Details Modal */}
+            {isModalOpen && (
+                <StarDetailsModal
+                star={star}
+                onClose={() => setIsModalOpen(false)}
+                />
+            )}
+            </>
+        );
+        }
 
 export default StarItem;
