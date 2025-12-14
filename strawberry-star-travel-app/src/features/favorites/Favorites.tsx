@@ -24,7 +24,7 @@ export default function Favorites() {
 
   if (loading) {
     return (
-      <div className="p-4 text-center opacity-80">
+      <div className="p-8 text-center opacity-80">
         <p>Loading your favorite stars...</p>
       </div>
     );
@@ -72,7 +72,7 @@ export default function Favorites() {
   ).sort();
 
   return (
-    <div className="p-4 min-h-screen bg-gradient-to-b from-[#1c0f2e] to-[#2a1a47]">
+    <div className="p-8 min-h-screen bg-gradient-to-b from-[#1c0f2e] to-[#2a1a47]">
       {/* Title */}
       <h1 className="text-3xl font-bold mb-4 text-pink-300 drop-shadow">
         Your Favorite Stars

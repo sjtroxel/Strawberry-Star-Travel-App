@@ -15,7 +15,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full fixed top-0 left-0 bg-gray-900 text-white p-4 shadow-lg z-50">
+    <nav className="w-full fixed top-0 left-0 bg-gray-900 text-white p-5 shadow-lg z-50">
       <div className="max-w-5xl mx-auto flex gap-8 items-center justify-between">
         
         {/* Left side — Logo + Greeting */}

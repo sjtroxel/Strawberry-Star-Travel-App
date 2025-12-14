@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "../../components/ProtectedRoute";
 import Navbar from "../../components/Navbar";
-
+import Home from "../../features/home/Home";
 import StarsList from "../../features/stars/StarsList";
 import Dashboard from "../../features/dashboard/Dashboard";
 import Profile from "../../features/profile/Profile";
@@ -17,10 +17,7 @@ export default function AppRouter() {
       <div className="pt-20">
         <Routes>
           {/* Home Page */}
-          <Route
-            path="/"
-            element={<h1>Welcome to the Strawberry Star Travel App!</h1>}
-          />
+          <Route path="/" element={<Home />} />
 
           {/* Login & Signup */}
           <Route path="/login" element={<Login />} />
@@ -32,7 +29,7 @@ export default function AppRouter() {
             element={
               <ProtectedRoute>
                 <main>
-                  <h1>Browse Stars</h1>
+                <br></br>
                   <StarsList />
                 </main>
               </ProtectedRoute>
