@@ -37,7 +37,12 @@ export default function StarsList() {
   const favorites = useFavorites();
 
   return (
-    <div className="p-4">
+    <div className="p-4 mt-20">
+
+      {/* Title */}
+      <h1 className="text-3xl font-bold mb-4 text-green-300 drop-shadow">
+        Browse Stars
+      </h1>
 
       {/* Controls */}
       <div className="flex flex-col sm:flex-row flex-wrap gap-2 mb-4">

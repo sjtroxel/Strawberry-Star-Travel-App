@@ -87,18 +87,18 @@ export default function Profile() {
 
 
   return (
-    <div className="max-w-md mx-auto p-6 mt-20 bg-gray-900 text-white rounded-lg">
-      <h2 className="text-xl font-bold mb-4 text-center">Your Profile</h2>
+    <div className="max-w-md mx-auto p-4 mt-28 bg-gray-900 text-white rounded-lg">
+      <h2 className="text-xl font-bold mb-3 text-center">Your Profile</h2>
 
       {/* Avatar Section */}
       <div className="flex flex-col items-center mb-6">
         <img
           src={avatar || "https://via.placeholder.com/150?text=No+Avatar"}
           alt="avatar"
-          className="w-32 h-32 rounded-full object-cover border-2 border-pink-300 shadow-md"
+          className="w-28 h-28 rounded-full object-cover border-2 border-pink-300 shadow-md"
         />
 
-        <label className="mt-3 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded cursor-pointer">
+        <label className="mt-2 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded cursor-pointer">
           Upload Avatar
           <input
             type="file"
@@ -143,13 +143,13 @@ export default function Profile() {
 
       <button
         onClick={handleUpdateProfile}
-        className="bg-blue-600 hover:bg-blue-700 p-2 rounded mt-2 w-full"
+        className="bg-blue-600 hover:bg-blue-700 p-1 rounded mt-1 w-full"
       >
         Save Profile Changes
       </button>
 
       {/* Change password section */}
-      <h3 className="text-lg font-semibold mt-10 mb-2 text-center">Change Password</h3>
+      <h3 className="text-lg font-semibold mt-4 mb-2 text-center">Change Password</h3>
       <input
         type="password"
         placeholder="New Password"
@@ -167,7 +167,7 @@ export default function Profile() {
 
       <button
         onClick={handleChangePassword}
-        className="bg-green-600 hover:bg-green-700 p-2 rounded mt-2 w-full"
+        className="bg-green-600 hover:bg-green-700 p-1 rounded mt-1 w-full"
       >
         Change Password
       </button>

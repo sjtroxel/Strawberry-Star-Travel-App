@@ -14,7 +14,7 @@ export default function AppRouter() {
   return (
     <>
       <Navbar />
-      <div className="pt-20">
+      <div>
         <Routes>
           {/* Home Page */}
           <Route path="/" element={<Home />} />
