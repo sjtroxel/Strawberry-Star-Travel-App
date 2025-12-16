@@ -6,19 +6,28 @@ interface Star {
   left: number;
   delay: number;
   opacity: number;
+  driftX: number;
+  driftY: number;
+  duration: number;
 }
 
 export default function Home() {
   const [hideScroll, setHideScroll] = useState(false);
   const [stars] = useState<Star[]>(() =>
-    Array.from({ length: 140 }, () => ({
-      size: Math.random() * 2 + 1.5, // slightly bigger
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-      delay: Math.random() * 6,
-      opacity: Math.random() * 0.5 + 0.6, // slightly brighter
-    }))
-  );
+  Array.from({ length: 140 }, () => ({
+    size: Math.random() * 2 + 2.5, // ⭐ slightly larger than before
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+    delay: Math.random() * 6,
+    opacity: Math.random() * 0.5 + 0.6,
+
+    // 🌌 drift in ANY direction
+    driftX: (Math.random() - 0.5) * 200, // -100px → +100px
+    driftY: (Math.random() - 0.5) * 200, // -100px → +100px
+    duration: 20 + Math.random() * 20,   // 20s–40s
+  }))
+);
+
 
   useEffect(() => {
     const hide = () => setHideScroll(true);
@@ -39,22 +48,27 @@ export default function Home() {
   return (
     <main className="relative w-full overflow-x-hidden text-white">
       {/* Stars */}
-      <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
-        {stars.map((star, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              top: `${star.top}%`,
-              left: `${star.left}%`,
-              opacity: star.opacity,
-              animation: `twinkle 2s ease-in-out ${star.delay}s infinite`,
-            }}
-          />
-        ))}
-      </div>
+    <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
+      {stars.map((star, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full bg-white"
+          style={{
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            top: `${star.top}%`,
+            left: `${star.left}%`,
+            opacity: star.opacity,
+            animation: `
+              twinkle 2.5s ease-in-out ${star.delay}s infinite,
+              starDrift ${star.duration}s linear infinite
+            `,
+            '--dx': `${star.driftX}px`,
+            '--dy': `${star.driftY}px`,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
 
       {/* Gradient overlay */}
       <div className="pointer-events-none fixed inset-0 -z-100 bg-linear-to-b from-black via-gray-900 to-rose-950" />
@@ -122,22 +136,29 @@ export default function Home() {
       </footer>
 
       {/* Animations */}
-      <style>
+        <style>
         {`
           @keyframes starDrift {
-            from { transform: translateY(0); }
-            to { transform: translateY(-200px); }
+            from {
+              transform: translate(0, 0);
+            }
+            to {
+              transform: translate(var(--dx), var(--dy));
+            }
           }
-          @keyframes starDriftReverse {
-            from { transform: translateY(0); }
-            to { transform: translateY(200px); }
-          }
+
           @keyframes twinkle {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
+            0%, 100% {
+              opacity: 0.4;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 1;
+              transform: scale(1.35);
+            }
           }
         `}
-      </style>
+        </style>
     </main>
   );
 }
