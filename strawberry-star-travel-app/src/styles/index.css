@@ -82,3 +82,8 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
