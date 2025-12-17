@@ -2,6 +2,7 @@ import React from "react";
 import { supabase } from "../supabaseClient";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Starfield from "../components/Starfield"
 
 export default function Signup() {
   const [username, setUsername] = React.useState("");
@@ -102,7 +103,8 @@ export default function Signup() {
 
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 py-10 bg-linear-to-b from-black via-gray-900 to-blue-900 text-white">
+    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-10 text-white overflow-hidden">
+      <Starfield gradient="from-black via-black/90 to-blue-500/40" />
       <div className="w-full max-w-sm bg-gray-950/70 backdrop-blur-xl border border-gray-700/40 rounded-2xl p-5 mt-10 shadow-2xl">
         <h1 className="text-center text-xl font-bold tracking-wide mb-6 pb-4">
           Create Your Account
@@ -254,7 +256,7 @@ export default function Signup() {
             {message}
             {signupSuccess && (
               <span className="block text-blue-300 mt-2">
-                Redirecting to home in {countdown} seconds...
+                Redirecting to home in T-{countdown} seconds...
               </span>
             )}
           </p>
