@@ -1,126 +1,265 @@
 import React from "react";
 import { supabase } from "../supabaseClient";
+import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
-
   const [username, setUsername] = React.useState("");
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
-
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
+  const navigate = useNavigate();
+  const [signupSuccess, setSignupSuccess] = React.useState(false);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
   const [message, setMessage] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+
+  const [countdown, setCountdown] = React.useState(15);
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setMessage("");
+    setLoading(true);
 
-    // Basic client-side validation
+    if (!username.trim() || !firstName.trim() || !lastName.trim()) {
+      setMessage("Please fill in all required fields.");
+      setLoading(false);
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setMessage("Please enter a valid email.");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters.");
+      setLoading(false);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setMessage("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
-    if (!username || !email || !firstName || !lastName) {
-      setMessage("Please fill in all required fields.");
-      return;
-    }
-
-    // Sign up with Supabase
-    const { data, error } = await supabase.auth.signUp({
+    const result = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
-          username,
-          firstName,
-          lastName,
-        },
+        data: { username, firstName, lastName },
       },
     });
 
-    if (error) {
-      setMessage(error.message);
+    if (result.error) {
+      setMessage(result.error.message);
     } else {
-      const newUser = data.user;
-      const newUsername = newUser?.user_metadata?.username;
-      setMessage(`Signup successful, ${newUsername}! Check your email to verify your account.`);
+      const newUsername =
+        result.data?.user?.user_metadata?.username || username;
+
+      setMessage(
+        `Signup successful, ${newUsername}! Check your email to verify your account.`
+      );
+      setSignupSuccess(true);
+      setCountdown(15);
     }
+
+    setLoading(false);
   }
 
+  React.useEffect(() => {
+    if (!signupSuccess) return;
+
+    // Countdown interval
+    const interval = setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+
+    // Redirect at 15 seconds
+    const redirectTimer = setTimeout(() => {
+      navigate("/");
+    }, 15000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(redirectTimer);
+    };
+  }, [signupSuccess, navigate]);
+
+
   return (
-  <div className="flex justify-center items-center min-h-[calc(100vh-5rem)] pt-20"> 
-    <div className="max-w-sm w-full mx-auto p-6 bg-gray-900 text-white rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-5 text-center">Create an Account</h2>
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-10 bg-linear-to-b from-black via-gray-900 to-blue-900 text-white">
+      <div className="w-full max-w-sm bg-gray-950/70 backdrop-blur-xl border border-gray-700/40 rounded-2xl p-5 mt-10 shadow-2xl">
+        <h1 className="text-center text-xl font-bold tracking-wide mb-6 pb-4">
+          Create Your Account
+        </h1>
 
-        <form onSubmit={handleSignup} className="flex flex-col gap-3">
-          {/* Username */}
-          <input
-            type="text"
-            placeholder="Username"
-            className="p-2 rounded text-black"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        <form onSubmit={handleSignup} autoComplete="off" className="flex flex-col gap-5">
+          {/* TEXT FIELDS */}
+          {[
+            {
+              label: "Username",
+              value: username,
+              set: setUsername,
+              type: "text",
+              auto: "new-username",
+            },
+            {
+              label: "First Name",
+              value: firstName,
+              set: setFirstName,
+              type: "text",
+              auto: "given-name",
+            },
+            {
+              label: "Last Name",
+              value: lastName,
+              set: setLastName,
+              type: "text",
+              auto: "family-name",
+            },
+            {
+              label: "Email",
+              value: email,
+              set: setEmail,
+              type: "email",
+              auto: "new-email",
+            },
+          ].map((field) => (
+            <div key={field.label} className="relative">
+              <input
+                type={field.type}
+                value={field.value}
+                onChange={(e) => field.set(e.target.value)}
+                placeholder=" "
+                autoComplete={field.auto}
+                className="w-full px-3 py-2.5 bg-gray-800/60 text-white rounded-lg 
+                border border-gray-700 outline-none 
+                focus:border-blue-400 focus:ring-4 focus:ring-blue-600/20
+                peer transition-all"
+              />
 
-          {/* First Name */}
-          <input
-            type="text"
-            placeholder="First Name"
-            className="p-2 rounded text-black"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
+              <label
+                className={`
+                  absolute left-3 px-1 bg-gray-950/70 rounded-md 
+                  text-gray-400 transition-all pointer-events-none
+                  ${field.value 
+                    ? "top-[-0.55rem] text-xs text-blue-300" 
+                    : "top-2.5 text-base"}
+                  peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-blue-300
+                `}
+              >
+                {field.label}
+              </label>
+            </div>
+          ))}
 
-          {/* Last Name */}
-          <input
-            type="text"
-            placeholder="Last Name"
-            className="p-2 rounded text-black"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
+          {/* PASSWORD */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              placeholder=" "
+              autoComplete="new-password"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2.5 bg-gray-800/60 rounded-lg border border-gray-700 
+              text-white focus:border-blue-400 focus:ring-4 focus:ring-blue-600/20 
+              outline-none peer"
+            />
 
-          {/* Email */}
-          <input
-            type="email"
-            placeholder="Email"
-            className="p-2 rounded text-black"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+            <label
+              className={`
+                absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all
+                ${password 
+                  ? "top-[-0.55rem] text-xs text-blue-300" 
+                  : "top-2.5 text-base"}
+                peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-blue-300
+              `}
+            >
+              Password
+            </label>
 
-          {/* Password */}
-          <input
-            type="password"
-            placeholder="Password"
-            className="p-2 rounded text-black"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-300 transition"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
 
-          {/* Confirm Password */}
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className="p-2 rounded text-black"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+          {/* CONFIRM PASSWORD */}
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              placeholder=" "
+              autoComplete="new-password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-3 py-2.5 bg-gray-800/60 rounded-lg border border-gray-700 
+              text-white focus:border-blue-400 focus:ring-4 focus:ring-blue-600/20 
+              outline-none peer"
+            />
 
+            <label
+              className={`
+                absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all
+                ${confirmPassword 
+                  ? "top-[-0.55rem] text-xs text-blue-300" 
+                  : "top-2.5 text-base"}
+                peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-blue-300
+              `}
+            >
+              Confirm Password
+            </label>
+
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((s) => !s)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-300 transition"
+            >
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+
+          {/* BUTTON */}
           <button
             type="submit"
-            className="mt-3 bg-blue-600 hover:bg-blue-700 p-2 rounded"
+            disabled={loading}
+            className="mt-1 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 
+            active:scale-[.98] transition font-semibold tracking-wide 
+            shadow-lg shadow-blue-600/30 disabled:opacity-50"
           >
-            Sign Up
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
-
-      {message && <p className="mt-3 text-sm text-red-300">{message}</p>}
+        {/* EXTRA SPACING + CONFIRM/ERROR MESSAGE */}
+        {message && (
+          <p className="mt-4 pt-3 text-center text-sm text-red-300">
+            {message}
+            {signupSuccess && (
+              <span className="block text-blue-300 mt-2">
+                Redirecting to home in {countdown} seconds...
+              </span>
+            )}
+          </p>
+        )}
+      </div>
     </div>
-  </div> 
   );
 }
