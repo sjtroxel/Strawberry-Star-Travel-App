@@ -1,42 +1,15 @@
 import { useEffect, useState } from "react";
-
-interface Star {
-  size: number;
-  top: number;
-  left: number;
-  delay: number;
-  opacity: number;
-  driftX: number;
-  driftY: number;
-  duration: number;
-}
+import Starfield from "../../components/Starfield"; 
 
 export default function Home() {
   const [hideScroll, setHideScroll] = useState(false);
-  const [stars] = useState<Star[]>(() =>
-  Array.from({ length: 140 }, () => ({
-    size: Math.random() * 2 + 2.5, // ⭐ slightly larger than before
-    top: Math.random() * 100,
-    left: Math.random() * 100,
-    delay: Math.random() * 6,
-    opacity: Math.random() * 0.5 + 0.6,
-
-    // 🌌 drift in ANY direction
-    driftX: (Math.random() - 0.5) * 200, // -100px → +100px
-    driftY: (Math.random() - 0.5) * 200, // -100px → +100px
-    duration: 20 + Math.random() * 20,   // 20s–40s
-  }))
-);
-
 
   useEffect(() => {
     const hide = () => setHideScroll(true);
-
     window.addEventListener("wheel", hide, { passive: true });
     window.addEventListener("touchstart", hide);
     window.addEventListener("keydown", hide);
     window.addEventListener("mousedown", hide);
-
     return () => {
       window.removeEventListener("wheel", hide);
       window.removeEventListener("touchstart", hide);
@@ -47,31 +20,8 @@ export default function Home() {
 
   return (
     <main className="relative w-full overflow-x-hidden text-white">
-      {/* Stars */}
-    <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
-      {stars.map((star, i) => (
-        <span
-          key={i}
-          className="absolute rounded-full bg-white"
-          style={{
-            width: `${star.size}px`,
-            height: `${star.size}px`,
-            top: `${star.top}%`,
-            left: `${star.left}%`,
-            opacity: star.opacity,
-            animation: `
-              twinkle 2.5s ease-in-out ${star.delay}s infinite,
-              starDrift ${star.duration}s linear infinite
-            `,
-            '--dx': `${star.driftX}px`,
-            '--dy': `${star.driftY}px`,
-          } as React.CSSProperties}
-        />
-      ))}
-    </div>
-
-      {/* Gradient overlay */}
-      <div className="pointer-events-none fixed inset-0 -z-100 bg-linear-to-b from-black via-gray-900 to-rose-950" />
+      {/* 🌟 Starfield with gradient */}
+      <Starfield gradient="from-black via-gray-900 to-rose-950" />
 
       {/* Hero section */}
       <section className="relative min-h-screen w-full flex flex-col items-center justify-center px-6 text-center z-10">
@@ -131,34 +81,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-xs text-gray-500 z-10">
+      <footer className="py-8 text-center text-s text-gray-400 z-10">
         © {new Date().getFullYear()} sjtroxel. All rights reserved.
       </footer>
-
-      {/* Animations */}
-        <style>
-        {`
-          @keyframes starDrift {
-            from {
-              transform: translate(0, 0);
-            }
-            to {
-              transform: translate(var(--dx), var(--dy));
-            }
-          }
-
-          @keyframes twinkle {
-            0%, 100% {
-              opacity: 0.4;
-              transform: scale(1);
-            }
-            50% {
-              opacity: 1;
-              transform: scale(1.35);
-            }
-          }
-        `}
-        </style>
     </main>
   );
 }
