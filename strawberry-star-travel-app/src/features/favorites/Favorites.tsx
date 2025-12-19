@@ -72,7 +72,7 @@ export default function Favorites() {
   ).sort();
 
   return (
-    <div className="p-8 mt-24min-h-screen bg-gradient-to-b from-[#1c0f2e] to-[#2a1a47]">
+    <div className="p-8 mt-24min-h-screen bg-linear-to-b from-[#1c0f2e] to-[#2a1a47]">
       {/* Title */}
       <h1 className="text-3xl font-bold mb-4 mt-24 text-pink-300 drop-shadow">
         Your Favorite Stars
