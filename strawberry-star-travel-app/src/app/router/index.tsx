@@ -29,7 +29,6 @@ export default function AppRouter() {
             element={
               <ProtectedRoute>
                 <main>
-                <br></br>
                   <StarsList />
                 </main>
               </ProtectedRoute>
