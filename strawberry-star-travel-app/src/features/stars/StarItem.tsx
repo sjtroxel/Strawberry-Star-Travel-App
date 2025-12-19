@@ -64,7 +64,7 @@ export default function StarItem({ star, favorites }: StarItemProps) {
         <h2
           className={
             star.name && star.name.trim() !== ""
-              ? "text-2xl font-extrabold text-emerald-400 mb-4 pb-2 drop-shadow-sm"
+              ? "text-2xl font-bold text-emerald-400 mb-4 pb-2 drop-shadow-sm"
               : "text-2xl italic text-slate-400 pb-2 mb-4"
           }
         >
