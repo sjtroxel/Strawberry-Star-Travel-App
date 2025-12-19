@@ -71,10 +71,33 @@ export default function StarDetailsModal({ star, anchorRect, onClose, wikiData }
 
       {/* Wikipedia Section */}
       <div className="mt-2 border-t border-cyan-700 pt-2">
-        <h3 className="text-sm font-semibold text-cyan-200 mb-1">Astronomical Context</h3>
-        {wikiData.loading && <p className="text-xs text-cyan-400 italic">Loading…</p>}
-        {wikiData.error && <p className="text-xs text-cyan-500 italic">No Wikipedia article available.</p>}
-        {wikiData.data && <p className="text-xs text-cyan-100 leading-relaxed">{wikiData.data.extract}</p>}
+        <h3 className="text-sm font-semibold text-cyan-200 mb-1">
+          Astronomical Context
+        </h3>
+        {wikiData.loading && (
+          <p className="text-xs text-cyan-400 italic">Loading…</p>
+        )}
+        {wikiData.error && (
+          <p className="text-xs text-cyan-500 italic">
+            No Wikipedia article available.
+          </p>
+        )}
+        {wikiData.data && (
+          <>
+            <p className="text-xs text-cyan-100 leading-relaxed">
+              {wikiData.data.extract}
+            </p>
+            {/* Read more link */}
+            <a
+              href={`https://en.wikipedia.org/?curid=${wikiData.data.pageid}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-2 text-pink-400 text-xs underline hover:text-pink-300"
+            >
+              Read more on Wikipedia →
+            </a>
+          </>
+        )}
       </div>
     </div>,
     document.body
