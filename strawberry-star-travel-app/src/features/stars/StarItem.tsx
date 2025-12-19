@@ -1,5 +1,6 @@
-import React from "react";
+import { useState, useRef } from "react";
 import type { Star } from "./Star";
+import { useWikipediaSummary } from "./hooks/useWikipediaSummary";
 import StarDetailsModal from "./StarDetailsModal";
 
 interface StarItemProps {
@@ -13,98 +14,105 @@ interface StarItemProps {
   };
 }
 
-function StarItem({ star, favorites }: StarItemProps) {
+export default function StarItem({ star, favorites }: StarItemProps) {
   const { addFavorite, removeFavorite, isFavorite } = favorites;
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Always call hooks unconditionally — this is now safe.
+  const wikiData = useWikipediaSummary(star);
 
   const displayName =
-    star.name && star.name.trim() !== "" ? star.name : "unnamed star";
-
-  // ★ Rose-colored name, darker + bolder
-  const nameClasses =
-    star.name && star.name.trim() !== ""
-      ? "text-2xl font-extrabold text-emerald-400 mb-4 pb-2 drop-shadow-sm"
-      : "text-2xl italic text-slate-400 pb-2 mb-4";
-
-  const PARSEC_TO_LIGHTYEAR = 3.26156;
-  const distanceInLightYears = star.distanceLy * PARSEC_TO_LIGHTYEAR;
+    star.name && star.name.trim() !== "" ? star.name : "Unnamed Star";
 
   const handleFavoriteClick = () => {
     if (isFavorite(star.id)) removeFavorite(star.id);
     else addFavorite(star);
   };
 
+  const handleDetailsClick = () => {
+    if (!cardRef.current) return;
+
+    // Capture card position *at the moment of clicking*
+    const rect = cardRef.current.getBoundingClientRect();
+    setAnchorRect(rect);
+    setIsModalOpen(true);
+  };
+
+  const PARSEC_TO_LIGHTYEAR = 3.26156;
+  const distanceInLy = star.distanceLy * PARSEC_TO_LIGHTYEAR;
+
   return (
     <>
       <div
+        ref={cardRef}
         className="
-          h-full flex flex-col
-          bg-white/25 backdrop-blur-xl
-          p-4 rounded-xl shadow-lg border border-blue-900/40
-          m-2 transform transition-transform duration-300
-          hover:scale-[1.03] hover:shadow-[0_0_18px_rgba(0,180,255,0.45)]
+          h-full flex flex-col 
+          bg-white/25 backdrop-blur-xl 
+          p-4 rounded-xl shadow-lg 
+          border border-blue-900/40 
+          m-2 transform transition-transform duration-300 
+          hover:scale-[1.03] 
+          hover:shadow-[0_0_18px_rgba(0,180,255,0.45)] 
+          relative
         "
       >
-        {/* Star Name */}
-        <h2 className={nameClasses}>{displayName}</h2>
+        <h2
+          className={
+            displayName
+              ? "text-2xl font-extrabold text-emerald-400 mb-4 pb-2 drop-shadow-sm"
+              : "text-2xl italic text-slate-400 pb-2 mb-4"
+          }
+        >
+          {displayName}
+        </h2>
 
-        {/* Details */}
         <ul className="text-slate-200 text-sm space-y-1 flex-1">
           <li>
             <span className="font-semibold text-slate-300">Designation:</span>{" "}
-            <span className="text-slate-100">{star.designation}</span>
+            {star.designation}
           </li>
-
           <li>
             <span className="font-semibold text-slate-300">Spectral Type:</span>{" "}
-            <span className="text-slate-100">{star.spectralType}</span>
+            {star.spectralType}
           </li>
-
           <li>
             <span className="font-semibold text-slate-300">Distance:</span>{" "}
-            <span className="text-slate-100">
-              {distanceInLightYears.toFixed(2)} light-years
-            </span>
-            <span className="text-xs opacity-60">
-              {" "}
-              ({star.distanceLy.toFixed(2)} pc)
-            </span>
+            {distanceInLy.toFixed(2)} ly ({star.distanceLy.toFixed(2)} pc)
           </li>
-
           <li>
             <span className="font-semibold text-slate-300">Constellation:</span>{" "}
-            <span className="text-slate-100">{star.constellation}</span>
+            {star.constellation}
           </li>
-
-          <li className="mb-2">
+          <li>
             <span className="font-semibold text-slate-300">
               Apparent Magnitude:
             </span>{" "}
-            <span className="text-slate-100">{star.apparentMagnitude}</span>
+            {star.apparentMagnitude}
           </li>
 
           {star.imageUrl && (
             <li className="mt-1">
               <img
                 src={star.imageUrl}
-                alt={`Image of ${displayName}`}
-                className="
-                  w-full h-auto rounded-md
-                  border border-blue-700/40 shadow
-                "
+                alt={displayName}
+                className="w-full h-auto rounded-md border border-blue-700/40 shadow"
               />
             </li>
           )}
         </ul>
 
-        {/* Action Buttons */}
-        <div className="mt-0 flex gap-2">
+        <div className="mt-2 flex gap-2">
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleDetailsClick}
             className="
-              flex-1 px-3 py-2 rounded-lg bg-blue-900/80 hover:bg-blue-800
-              text-sm font-semibold text-slate-100 transition
+              flex-1 px-3 py-2 rounded-lg 
+              bg-blue-900/80 hover:bg-blue-800 
+              text-sm font-semibold text-slate-100 
+              transition
             "
           >
             🔍 Details
@@ -112,25 +120,26 @@ function StarItem({ star, favorites }: StarItemProps) {
 
           <button
             onClick={handleFavoriteClick}
-            className={`
-              flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition
-              ${
-                isFavorite(star.id)
-                  ? "bg-rose-700/80 hover:bg-rose-600/80 text-white"
-                  : "bg-blue-950/80 hover:bg-blue-900/80 text-rose-200"
-              }
-            `}
+            className={`flex-1 px-3 py-2 rounded-lg text-sm font-semibold transition ${
+              isFavorite(star.id)
+                ? "bg-rose-700/80 hover:bg-rose-600/80 text-white"
+                : "bg-blue-950/80 hover:bg-blue-900/80 text-rose-200"
+            }`}
           >
             {isFavorite(star.id) ? "💔 Remove" : "💖 Save"}
           </button>
         </div>
       </div>
 
-      {isModalOpen && (
-        <StarDetailsModal star={star} onClose={() => setIsModalOpen(false)} />
+      {/* ---- MODAL PORTAL ---- */}
+      {isModalOpen && anchorRect && (
+        <StarDetailsModal
+          star={star}
+          anchorRect={anchorRect}
+          onClose={() => setIsModalOpen(false)}
+          wikiData={wikiData}
+        />
       )}
     </>
   );
 }
-
-export default StarItem;

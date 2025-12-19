@@ -1,156 +1,83 @@
+import React from "react";
+import { createPortal } from "react-dom";
 import type { Star } from "./Star";
-import { useWikipediaSummary } from "./hooks/useWikipediaSummary";
-import {
-  spectralExplanation,
-  estimateTemperature,
-  travelTimeLy,
-} from "./utils/astronomy";
+import { spectralExplanation, estimateTemperature, travelTimeLy } from "./utils/astronomy";
+import type { WikipediaSummary } from "./types/Wikipedia"; // <-- FIXED
 
 interface StarDetailsModalProps {
   star: Star;
+  anchorRect: DOMRect;
   onClose: () => void;
+  wikiData: {
+    data: WikipediaSummary | null;
+    loading: boolean;
+    error: boolean;
+  };
 }
 
-export default function StarDetailsModal({
-  star,
-  onClose,
-}: StarDetailsModalProps) {
-  const displayName =
-    star.name && star.name.trim() !== "" ? star.name : "Unnamed Star";
-
-  // Wikipedia lookup (prioritize HIP)
-  const { data, loading, error } = useWikipediaSummary(star);
-
-  // Derived astronomy
+export default function StarDetailsModal({ star, anchorRect, onClose, wikiData }: StarDetailsModalProps) {
   const spectralInfo = spectralExplanation(star.spectralType);
   const temperature = estimateTemperature(star.spectralType);
   const travelYears = travelTimeLy(star.distanceLy, 0.1);
-
-  // Compute light-years and parsecs correctly
-  // Assume star.distanceLy actually stores parsecs (from the HYG database)
-  const distancePc = star.distanceLy; // stored in the dataset as parsecs
+  const distancePc = star.distanceLy;
   const distanceLy = distancePc * 3.26156;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-      <div className="bg-gray-900 text-white max-w-lg w-full mx-4 rounded-xl shadow-xl border border-gray-700 p-6 relative">
-        
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-gray-400 hover:text-white text-xl"
-          aria-label="Close"
-        >
-          ✕
-        </button>
+  const style: React.CSSProperties = {
+    position: "absolute",
+    top: window.scrollY + anchorRect.top,
+    left: window.scrollX + anchorRect.left,
+    width: anchorRect.width,
+    maxHeight: 400,
+    overflowY: "auto",
+    zIndex: 9999,
+  };
 
-        {/* Header */}
-        <h2 className="text-2xl font-bold text-yellow-300 mb-4">
-          {displayName}
-        </h2>
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!(e.target as HTMLElement).closest(".modal-content")) onClose();
+  };
 
-        {/* Core Details */}
-        <ul className="space-y-2 text-sm text-gray-200">
-          <li>
-            <span className="font-semibold">Designation:</span>{" "}
-            HIP {star.designation}
-          </li>
+  return createPortal(
+    <div style={style} onClick={handleOutsideClick} className="modal-content bg-linear-to-b from-blue-900/95 via-black/95 to-cyan-900/95 text-cyan-100 p-4 rounded-lg shadow-lg border border-cyan-600">
+      {/* Close button */}
+      <button onClick={onClose} aria-label="Close" className="absolute top-1 right-1 w-8 h-8 flex items-center justify-center rounded-full bg-cyan-800/70 hover:bg-cyan-700 text-white text-lg font-bold">
+        ✕
+      </button>
 
-          <li>
-            <span className="font-semibold">Spectral Type:</span>{" "}
-            {star.spectralType}
-          </li>
+      {/* Title */}
+      <h2 className="text-xl font-extrabold mb-3 text-center bg-linear-to-r from-rose-300 via-pink-200 to-rose-400 bg-clip-text text-transparent">
+        {star.name || "Unnamed Star"}
+      </h2>
 
-          <li>
-            <span className="font-semibold">Distance:</span> {distanceLy.toFixed(2)} light-years{" "}
-            <span className="text-gray-400">({distancePc.toFixed(2)} pc)</span>
-          </li>
+      {/* Core Details */}
+      <ul className="text-sm text-cyan-100/95 mb-2 space-y-1">
+        <li><span className="font-semibold text-cyan-300">Designation:</span> {star.designation}</li>
+        <li><span className="font-semibold text-cyan-300">Spectral Type:</span> {star.spectralType}</li>
+        <li><span className="font-semibold text-cyan-300">Distance:</span> {distanceLy.toFixed(2)} ly ({distancePc.toFixed(2)} pc)</li>
+        <li><span className="font-semibold text-cyan-300">Constellation:</span> {star.constellation}</li>
+        <li><span className="font-semibold text-cyan-300">Apparent Magnitude:</span> {star.apparentMagnitude}</li>
+      </ul>
 
-          <li>
-            <span className="font-semibold">Constellation:</span>{" "}
-            {star.constellation}
-          </li>
-
-          <li>
-            <span className="font-semibold">Apparent Magnitude:</span>{" "}
-            {star.apparentMagnitude}
-          </li>
-        </ul>
-
-        {/* Derived Science */}
-        <div className="mt-4 space-y-2 text-sm text-gray-300">
-          {spectralInfo && (
-            <div>
-              <span className="font-semibold text-gray-100">
-                Stellar Classification:
-              </span>{" "}
-              {spectralInfo}
-            </div>
-          )}
-
-          {temperature && (
-            <div>
-              <span className="font-semibold text-gray-100">
-                Estimated Surface Temperature:
-              </span>{" "}
-              ~{temperature.toLocaleString()} K
-            </div>
-          )}
-        </div>
-
-        {/* Optional Image */}
-        {star.imageUrl && (
-          <img
-            src={star.imageUrl}
-            alt={`Image of ${displayName}`}
-            className="mt-4 w-full rounded-lg border border-gray-600"
-          />
-        )}
-
-        {/* Travel Flavor */}
-        <div className="mt-4 text-xs text-red-400 italic">
-          At 10% the speed of light, a spacecraft would take approximately{" "}
-          {Math.round(travelYears).toLocaleString()} years to reach this star.
-        </div>
-
-        {/* Wikipedia */}
-        <div className="mt-6 border-t border-gray-700 pt-4">
-          <h3 className="text-lg font-semibold text-pink-300 mb-2">
-            Astronomical Context
-          </h3>
-
-          {loading && (
-            <p className="text-sm text-gray-400 italic">
-              Fetching interstellar knowledge from Wikipedia…
-            </p>
-          )}
-
-          {error && (
-            <p className="text-sm text-gray-500 italic">
-              No Wikipedia article available for this star.
-            </p>
-          )}
-
-          {data && (
-            <>
-              <p className="text-sm text-gray-200 leading-relaxed">
-                {data.extract}
-              </p>
-
-              {data.content_urls?.desktop?.page && (
-                <a
-                  href={data.content_urls.desktop.page}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-3 text-sm text-pink-400 hover:text-pink-300 underline"
-                >
-                  Read more on Wikipedia →
-                </a>
-              )}
-            </>
-          )}
-        </div>
+      {/* Science */}
+      <div className="text-sm text-cyan-200/90 mb-2 space-y-1">
+        {spectralInfo && <p><span className="font-semibold text-cyan-300">Stellar Classification:</span> {spectralInfo}</p>}
+        {temperature && <p><span className="font-semibold text-cyan-300">Estimated Surface Temp:</span> ~{temperature.toLocaleString()} K</p>}
       </div>
-    </div>
+
+      {star.imageUrl && <img src={star.imageUrl} alt={star.name} className="w-full h-auto rounded-md border border-cyan-600/50 shadow mb-2" />}
+
+      <p className="text-xs text-rose-300 italic">
+        At 0.1c, a spacecraft would take ~{Math.round(travelYears).toLocaleString()} years to reach this star.
+      </p>
+
+      {/* Wikipedia Section */}
+      <div className="mt-2 border-t border-cyan-700 pt-2">
+        <h3 className="text-sm font-semibold text-cyan-200 mb-1">Astronomical Context</h3>
+        {wikiData.loading && <p className="text-xs text-cyan-400 italic">Loading…</p>}
+        {wikiData.error && <p className="text-xs text-cyan-500 italic">No Wikipedia article available.</p>}
+        {wikiData.data && <p className="text-xs text-cyan-100 leading-relaxed">{wikiData.data.extract}</p>}
+      </div>
+    </div>,
+    document.body
   );
 }
+
