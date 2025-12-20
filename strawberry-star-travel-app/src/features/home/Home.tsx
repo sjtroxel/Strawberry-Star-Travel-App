@@ -28,10 +28,21 @@ export default function Home() {
       <section className="relative min-h-screen w-full flex flex-col items-center justify-center px-6 text-center z-10">
         
         {/* Title (slightly moved upward for space) */}
-        <h1 className="font-extrabold tracking-tight text-5xl leading-tight sm:text-6xl md:text-7xl drop-shadow-md mb-6 pt-8">
-          <span className="block text-pink-400">Strawberry</span>
-          <span className="block text-white">Star</span>
-          <span className="block text-rose-400">Travel</span>
+        <h1
+          className="
+            font-extrabold tracking-tight text-5xl leading-tight sm:text-6xl md:text-7xl
+            drop-shadow-[0_0_25px_rgba(255,100,200,0.45)]
+            mb-6 pt-8
+
+            bg-linear-to-b from-pink-300 via-fuchsia-400 to-rose-500
+            bg-clip-text text-transparent
+
+            animate-[titleShimmer_4s_ease-in-out_infinite]
+          "
+        >
+          <span className="block">Strawberry</span>
+          <span className="block">Star</span>
+          <span className="block">Travel</span>
         </h1>
 
         {/* 🐱 Strawberry’s cosmic floating avatar */}
@@ -47,7 +58,7 @@ export default function Home() {
         />
 
         {/* Tagline */}
-        <p className="max-w-md text-base leading-relaxed text-gray-300 italic sm:text-lg sm:max-w-xl">
+        <p className="max-w-md text-base leading-relaxed text-gray-200 font-semibold italic sm:text-lg sm:max-w-xl">
           Explore real stars. Save your favorites.
           <br />
           One day, plot a journey across the galaxy. 🚀
@@ -114,6 +125,23 @@ export default function Home() {
             0% { box-shadow: 0 0 8px rgba(255, 100, 150, 0.4); }
             50% { box-shadow: 0 0 16px rgba(255, 150, 200, 0.7); }
             100% { box-shadow: 0 0 8px rgba(255, 100, 150, 0.4); }
+          }
+          @keyframes titleShimmer {
+            0% {
+              filter: drop-shadow(0 0 4px rgba(255, 140, 200, 0.4))
+                      drop-shadow(0 0 12px rgba(255, 90, 160, 0.3));
+              opacity: 0.95;
+            }
+            50% {
+              filter: drop-shadow(0 0 14px rgba(255, 180, 240, 0.7))
+                      drop-shadow(0 0 30px rgba(255, 120, 200, 0.8));
+              opacity: 1;
+            }
+            100% {
+              filter: drop-shadow(0 0 4px rgba(255, 140, 200, 0.4))
+                      drop-shadow(0 0 12px rgba(255, 90, 160, 0.3));
+              opacity: 0.95;
+            }
           }
         `}
       </style>
