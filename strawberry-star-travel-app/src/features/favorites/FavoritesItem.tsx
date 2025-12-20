@@ -1,15 +1,17 @@
 import React, { useState, useRef } from "react";
 import type { Star } from "../stars/Star";
 import StarDetailsModal from "../stars/StarDetailsModal";
-import { useFavorites } from "../../hooks/useFavorites";
+import ConfirmRemoveModal from "../../components/ConfirmRemoveModal";
+// import { useFavorites } from "../../hooks/useFavorites";
 import { useWikipediaSummary } from "../stars/hooks/useWikipediaSummary";
 
 interface FavoritesItemProps {
   star: Star;
+  removeFavorite: (starId: number) => void;
 }
 
-export default function FavoritesItem({ star }: FavoritesItemProps) {
-  const { removeFavorite } = useFavorites();
+export default function FavoritesItem({ star, removeFavorite }: FavoritesItemProps) {
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
@@ -21,9 +23,17 @@ export default function FavoritesItem({ star }: FavoritesItemProps) {
   const displayName =
     star.name && star.name.trim() !== "" ? star.name : "Unnamed Star";
 
-  const handleRemoveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleRemove = () => {
+  if (cardRef.current) {
+    const rect = cardRef.current.getBoundingClientRect();
+    setAnchorRect(rect); // set the rect here
+    }
+    setShowConfirm(true);
+  };
+
+  const confirmRemove = () => {
     removeFavorite(star.id);
+    setShowConfirm(false);
   };
 
   const handleDetailsClick = () => {
@@ -108,7 +118,7 @@ export default function FavoritesItem({ star }: FavoritesItemProps) {
           </button>
 
           <button
-            onClick={handleRemoveClick}
+            onClick={handleRemove}
             className="
               flex-1 px-3 py-2 rounded-lg
               bg-rose-700/80 hover:bg-rose-600/80
@@ -119,6 +129,14 @@ export default function FavoritesItem({ star }: FavoritesItemProps) {
             💔 Remove
           </button>
         </div>
+
+      <ConfirmRemoveModal
+        star={star}
+        anchorRect={anchorRect!} // safe because we only render when showConfirm is true and anchorRect is set
+        isOpen={showConfirm && anchorRect !== null}
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={confirmRemove}
+      />
       </div>
 
       {isModalOpen && anchorRect && (

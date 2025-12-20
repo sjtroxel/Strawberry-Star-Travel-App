@@ -6,7 +6,7 @@ import Starfield from "../../components/Starfield";
 import type { Star } from "../stars/Star";
 
 export default function Favorites() {
-  const { favorites } = useFavorites();
+  const { favorites, removeFavorite } = useFavorites();
   const starsData = starsDataJson as Star[];
 
   // Convert favorites array to full star objects from JSON
@@ -20,11 +20,9 @@ export default function Favorites() {
     | {
         key: "distanceLy" | "apparentMagnitude" | "name" | "spectralType";
         direction: "asc" | "desc";
-      }
-    | null
-  >(null);
+      } | null>(null);
 
-    const filteredStars = React.useMemo(() => {
+  const filteredStars = React.useMemo(() => {
     let results = [...favoriteStars];
     // Search
     if (searchQuery.trim()) {
@@ -35,7 +33,6 @@ export default function Favorites() {
     // Sorting
     if (sortBy) {
       results.sort((a, b) => {
-        // ⭐ SPECIAL SORTING FOR NAME: push unnamed stars to bottom
         if (sortBy.key === "name") {
           const nameA = a.name?.trim() || "";
           const nameB = b.name?.trim() || "";
@@ -54,7 +51,6 @@ export default function Favorites() {
           // If both unnamed → equal
           return 0;
         }
-        // ⭐ DEFAULT SORTING for numerical fields
         const A = a[sortBy.key]!;
         const B = b[sortBy.key]!;
         if (A < B) return sortBy.direction === "asc" ? -1 : 1;
@@ -65,12 +61,12 @@ export default function Favorites() {
     return results;
   }, [favoriteStars, searchQuery, sortBy]);
 
-  const loading = false; // you may replace with real async in future
+  const loading = false; 
 
   return (
     <main className="relative w-full min-h-screen overflow-x-hidden text-white pt-20">
 
-      {/* ⭐ Dark Purple Starfield */}
+      {/* Dark Purple Starfield */}
       <Starfield gradient="from-black to-purple-950" />
 
       {/* Main Content */}
@@ -83,8 +79,7 @@ export default function Favorites() {
             text-center tracking-wide
             bg-linear-to-r from-purple-300 via-fuchsia-400 to-purple-300
             bg-clip-text text-transparent drop-shadow-[0_0_5px_rgba(0,225,255,0.7)]
-            animate-fadeIn
-          "
+            animate-fadeIn"
         >
           Your Favorite Stars
         </h1>
@@ -92,8 +87,7 @@ export default function Favorites() {
         <p
           className="
             text-fuchsia-200 text-md italic mb-6 mt-1 pb-2 font-semibold text-center opacity-0
-            animate-fadeIn
-          "
+            animate-fadeIn"
           style={{ animationDelay: "0.4s" }}
         >
           Saving the brightest points in your universe!
@@ -155,13 +149,10 @@ export default function Favorites() {
           </p>
         ) : (
           <>
-            {/* ------------------ */}
-            {/* FAVORITES GRID     */}
-            {/* identical Sizing   */}
-            {/* ------------------ */}
+            {/* Favorites Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr animate-fadeIn-delayed-2">
               {filteredStars.map((star) => (
-                <FavoritesItem key={star.id} star={star} />
+                <FavoritesItem key={star.id} star={star} removeFavorite={removeFavorite} />
               ))}
             </div>
 
