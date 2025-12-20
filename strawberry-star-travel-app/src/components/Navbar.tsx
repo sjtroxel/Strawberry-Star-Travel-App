@@ -2,9 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useUser } from "../hooks/useUser";
+import { useNavigate } from "react-router-dom"
 import Strawberry from "../styles/Strawberry.png";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const { user } = useUser();
   const username = user?.user_metadata?.username;
   const avatar = user?.user_metadata?.avatar;
@@ -13,6 +15,7 @@ export default function Navbar() {
   async function handleLogout() {
     await supabase.auth.signOut();
     setMenuOpen(false);
+    navigate("/", { replace: true });
   }
 
   return (
