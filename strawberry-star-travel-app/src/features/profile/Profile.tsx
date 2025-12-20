@@ -1,6 +1,8 @@
 import React from "react";
 import { useUser } from "../../hooks/useUser";
 import { supabase } from "../../supabaseClient";
+import Starfield from "../../components/Starfield";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Profile() {
   const { user } = useUser();
@@ -9,9 +11,12 @@ export default function Profile() {
   const [lastName, setLastName] = React.useState(user?.user_metadata?.lastName || "");
   const [avatar, setAvatar] = React.useState(user?.user_metadata?.avatar || "");
   const [newPassword, setNewPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("")  
+  const [confirmPassword, setConfirmPassword] = React.useState("");
   const [message, setMessage] = React.useState("");
 
+  // Show/hide password toggles
+  const [showNewPassword, setShowNewPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   // Upload Avatar to Cloudinary
   async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -33,49 +38,36 @@ export default function Profile() {
       if (data.secure_url) {
         setAvatar(data.secure_url);
 
-        // Save to Supabase user metadata
-        await supabase.auth.updateUser({
-          data: { avatar: data.secure_url }
-        });
-
+        await supabase.auth.updateUser({ data: { avatar: data.secure_url } });
         setMessage("Avatar updated!");
       }
     } catch {
       setMessage("Error uploading avatar.");
     }
-  }  
+  }
 
   // Update Profile Fields
   async function handleUpdateProfile() {
     if (!user) return;
-
     const { error } = await supabase.auth.updateUser({
       data: { username, firstName, lastName },
     });
-
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage("Profile updated successfully!");
-    }
+    setMessage(error ? error.message : "Profile updated successfully!");
   }
 
-  // Password Change
+  // Change Password
   async function handleChangePassword() {
     if (!user) return;
-
     if (!newPassword) {
       setMessage("Please enter a new password.");
       return;
     }
-
     if (newPassword !== confirmPassword) {
       setMessage("Passwords do not match.");
       return;
     }
 
     const { error } = await supabase.auth.updateUser({ password: newPassword });
-
     if (error) {
       setMessage(error.message);
     } else {
@@ -85,94 +77,142 @@ export default function Profile() {
     }
   }
 
-
   return (
-    <div className="max-w-md mx-auto p-4 mt-28 bg-gray-900 text-white rounded-lg">
-      <h2 className="text-xl font-bold mb-3 text-center">Your Profile</h2>
+    <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-10 text-white overflow-hidden">
+      {/* Starfield + golden aurora rift */}
+      <Starfield gradient="from-amber-800 via-slate-900/70 to-amber-500/30" />
 
-      {/* Avatar Section */}
-      <div className="flex flex-col items-center mb-6">
-        <img
-          src={avatar || "https://via.placeholder.com/150?text=No+Avatar"}
-          alt="avatar"
-          className="w-28 h-28 rounded-full object-cover border-2 border-pink-300 shadow-md"
-        />
+      {/* Glass-card container */}
+      <div className="w-full max-w-md bg-gray-950/70 backdrop-blur-xl border border-gray-700/40 rounded-2xl p-5 shadow-2xl z-10 mt-10">
+        <h2 className="text-center text-3xl font-bold text-lime-300 mb-6 pb-2">Profile Preferences</h2>
 
-        <label className="mt-2 bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded cursor-pointer">
-          Upload Avatar
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarUpload}
-            className="hidden"
+        {/* Avatar Section */}
+        <div className="flex flex-col items-center mb-6">
+          <img
+            src={avatar || ""}
+            alt=""
+            className="w-26 h-26 rounded-full object-cover border-2 border-pink-400 shadow-md mb-1"
           />
-        </label>
-      </div>      
+          <label className="mt-2 bg-purple-600 hover:bg-purple-700 px-3 py-1 mb-1 rounded cursor-pointer">
+            Upload Avatar
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              className="hidden"
+            />
+          </label>
+        </div>
 
-      {/* Show Email (read-only) */}
-      <input
-        type="email"
-        placeholder="Email"
-        value={user?.email || ""}
-        readOnly
-        className="p-2 rounded w-full mb-2 text-black bg-gray-300"
-      />
+        {/* Email (read-only) */}
+        <div className="relative mb-4">
+          <input
+            type="email"
+            value={user?.email || ""}
+            readOnly
+            placeholder=" "
+            className="w-full px-3 py-2.5 bg-gray-800/60 text-white rounded-lg border border-gray-700 outline-none peer"
+          />
+          <label className="absolute left-3 px-1 bg-gray-950/70 rounded-md transition-all pointer-events-none top-[-0.55rem] text-xs text-green-300">
+            Email
+          </label>
+        </div>
 
-      {/* Editable fields */}
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="p-2 rounded w-full mb-2 text-black"
-      />
-      <input
-        type="text"
-        placeholder="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        className="p-2 rounded w-full mb-2 text-black"
-      />
-      <input
-        type="text"
-        placeholder="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        className="p-2 rounded w-full mb-2 text-black"
-      />
+        {/* Editable Fields */}
+        {[
+          { label: "Username", value: username, setter: setUsername },
+          { label: "First Name", value: firstName, setter: setFirstName },
+          { label: "Last Name", value: lastName, setter: setLastName },
+        ].map((field) => (
+          <div key={field.label} className="relative mb-4">
+            <input
+              type="text"
+              value={field.value}
+              placeholder=" "
+              onChange={(e) => field.setter(e.target.value)}
+              className="w-full px-3 py-2.5 bg-gray-800/60 text-white rounded-lg border border-gray-700 outline-none peer"
+            />
+            <label
+              className={`absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all pointer-events-none ${
+                field.value
+                  ? "top-[-0.55rem] text-xs text-green-300"
+                  : "top-2.5 text-base"
+              } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-green-300`}
+            >
+              {field.label}
+            </label>
+          </div>
+        ))}
 
-      <button
-        onClick={handleUpdateProfile}
-        className="bg-blue-600 hover:bg-blue-700 p-1 rounded mt-1 w-full"
-      >
-        Save Profile Changes
-      </button>
+        <button
+          onClick={handleUpdateProfile}
+          className="w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:scale-[.98] transition tracking-wide shadow-lg shadow-blue-600/30"
+        >
+          Save Profile Changes
+        </button>
 
-      {/* Change password section */}
-      <h3 className="text-lg font-semibold mt-4 mb-2 text-center">Change Password</h3>
-      <input
-        type="password"
-        placeholder="New Password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        className="p-2 rounded w-full mb-2 text-black"
-      />
-      <input
-        type="password"
-        placeholder="Confirm New Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        className="p-2 rounded w-full mb-2 text-black"
-      />
+        {/* Password Change Section */}
+        <h3 className="text-lg font-semibold mt-6 mb-2 pt-4 pb-2 text-center">Change Password</h3>
 
-      <button
-        onClick={handleChangePassword}
-        className="bg-green-600 hover:bg-green-700 p-1 rounded mt-1 w-full"
-      >
-        Change Password
-      </button>
+        {/* New Password */}
+        <div className="relative mb-3">
+          <input
+            type={showNewPassword ? "text" : "password"}
+            value={newPassword}
+            placeholder=" "
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full px-3 py-2.5 bg-gray-800/60 text-white rounded-lg border border-gray-700 outline-none peer"
+          />
+          <label
+            className={`absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all pointer-events-none ${
+              newPassword ? "top-[-0.55rem] text-xs text-green-300" : "top-2.5 text-base"
+            } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-green-300`}
+          >
+            New Password
+          </label>
+          <button
+            type="button"
+            onClick={() => setShowNewPassword((s) => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-300 transition"
+          >
+            {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
-      {message && <p className="mt-2 text-green-300">{message}</p>}
+        {/* Confirm New Password */}
+        <div className="relative mb-4">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            value={confirmPassword}
+            placeholder=" "
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full px-3 py-2.5 bg-gray-800/60 text-white rounded-lg border border-gray-700 outline-none peer"
+          />
+          <label
+            className={`absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all pointer-events-none ${
+              confirmPassword ? "top-[-0.55rem] text-xs text-green-300" : "top-2.5 text-base"
+            } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-green-300`}
+          >
+            Confirm New Password
+          </label>
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword((s) => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-300 transition"
+          >
+            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
+
+        <button
+          onClick={handleChangePassword}
+          className="w-full py-1.5 rounded-lg bg-green-600 hover:bg-green-700 active:scale-[.98] transition tracking-wide shadow-lg shadow-green-600/30"
+        >
+          Change Password
+        </button>
+
+        {message && <p className="mt-4 pt-2 text-center text-sm text-green-300">{message}</p>}
+      </div>
     </div>
   );
 }
