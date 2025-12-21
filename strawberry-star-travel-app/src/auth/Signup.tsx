@@ -67,7 +67,7 @@ export default function Signup() {
         result.data?.user?.user_metadata?.username || username;
 
       setMessage(
-        `Signup successful, ${newUsername}! Check your email to verify your account.`
+        `Signup successful, ${newUsername}! In a few minutes, you will receive an e-mail to verify your account.`
       );
       setSignupSuccess(true);
       setCountdown(15);
