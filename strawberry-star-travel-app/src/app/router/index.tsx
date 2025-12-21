@@ -7,6 +7,7 @@ import StarsList from "../../features/stars/StarsList";
 import Dashboard from "../../features/dashboard/Dashboard";
 import Profile from "../../features/profile/Profile";
 import Favorites from "../../features/favorites/Favorites";
+import GalacticMap from "../../features/galactic-map/GalacticMap";
 import Login from "../../auth/Login";
 import Signup from "../../auth/Signup";
 
@@ -64,6 +65,17 @@ export default function AppRouter() {
               </ProtectedRoute>
             }
           />
+
+          {/* Galactic Map */}
+          <Route
+            path="/galactic-map"
+            element={
+              <ProtectedRoute>
+                <GalacticMap />
+              </ProtectedRoute>
+            }
+          />
+
         </Routes>
       </div>
     </>
