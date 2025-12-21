@@ -80,20 +80,20 @@ export default function Profile() {
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-10 text-white overflow-hidden">
       {/* Starfield + golden aurora rift */}
-      <Starfield gradient="from-amber-800 via-slate-900/70 to-amber-500/30" />
+      <Starfield gradient="from-stone-950 via-neutral-950 to-zinc-950" />
 
       {/* Glass-card container */}
-      <div className="w-full max-w-md bg-gray-950/70 backdrop-blur-xl border border-gray-700/40 rounded-2xl p-5 shadow-2xl z-10 mt-10">
-        <h2 className="text-center text-3xl font-bold text-lime-300 mb-6 pb-2">Profile Preferences</h2>
+      <div className="w-full max-w-md bg-gray-950/70 backdrop-blur-xl border border-red-700/40 rounded-2xl p-5 shadow-xl z-10 mt-10">
+        <h2 className="text-center text-3xl font-bold text-zinc-100 mb-6 pb-2">Profile Preferences</h2>
 
         {/* Avatar Section */}
         <div className="flex flex-col items-center mb-6">
           <img
             src={avatar || ""}
             alt=""
-            className="w-26 h-26 rounded-full object-cover border-2 border-pink-400 shadow-md mb-1"
+            className="w-27 h-27 rounded-full object-cover border-3 border-red-800 shadow-md mb-1"
           />
-          <label className="mt-2 bg-purple-600 hover:bg-purple-700 px-3 py-1 mb-1 rounded cursor-pointer">
+          <label className="mt-2 bg-red-800 hover:bg-red-950 shadow-lg active:scale-[.98] transition tracking-wide shadow-red-600/30 font-semibold px-3 py-1 mb-1 rounded-lg cursor-pointer">
             Upload Avatar
             <input
               type="file"
@@ -113,7 +113,7 @@ export default function Profile() {
             placeholder=" "
             className="w-full px-3 py-2.5 bg-gray-800/60 text-white rounded-lg border border-gray-700 outline-none peer"
           />
-          <label className="absolute left-3 px-1 bg-gray-950/70 rounded-md transition-all pointer-events-none top-[-0.55rem] text-xs text-green-300">
+          <label className="absolute left-3 px-1 bg-gray-950/70 rounded-md transition-all pointer-events-none top-[-0.55rem] text-xs text-red-300">
             Email
           </label>
         </div>
@@ -135,9 +135,9 @@ export default function Profile() {
             <label
               className={`absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all pointer-events-none ${
                 field.value
-                  ? "top-[-0.55rem] text-xs text-green-300"
+                  ? "top-[-0.55rem] text-xs text-red-300"
                   : "top-2.5 text-base"
-              } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-green-300`}
+              } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-red-300`}
             >
               {field.label}
             </label>
@@ -146,7 +146,7 @@ export default function Profile() {
 
         <button
           onClick={handleUpdateProfile}
-          className="w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 active:scale-[.98] transition tracking-wide shadow-lg shadow-blue-600/30"
+          className="w-full py-1.5 rounded-lg bg-red-800 hover:bg-red-950 active:scale-[.98] transition tracking-wide shadow-lg shadow-red-600/30"
         >
           Save Profile Changes
         </button>
@@ -165,15 +165,15 @@ export default function Profile() {
           />
           <label
             className={`absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all pointer-events-none ${
-              newPassword ? "top-[-0.55rem] text-xs text-green-300" : "top-2.5 text-base"
-            } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-green-300`}
+              newPassword ? "top-[-0.55rem] text-xs text-red-300" : "top-2.5 text-base"
+            } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-red-300`}
           >
             New Password
           </label>
           <button
             type="button"
             onClick={() => setShowNewPassword((s) => !s)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-300 transition"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-300 transition"
           >
             {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
@@ -190,15 +190,15 @@ export default function Profile() {
           />
           <label
             className={`absolute left-3 px-1 bg-gray-950/70 rounded-md text-gray-400 transition-all pointer-events-none ${
-              confirmPassword ? "top-[-0.55rem] text-xs text-green-300" : "top-2.5 text-base"
-            } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-green-300`}
+              confirmPassword ? "top-[-0.55rem] text-xs text-red-300" : "top-2.5 text-base"
+            } peer-focus:top-[-0.55rem] peer-focus:text-xs peer-focus:text-red-300`}
           >
             Confirm New Password
           </label>
           <button
             type="button"
             onClick={() => setShowConfirmPassword((s) => !s)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-300 transition"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-300 transition"
           >
             {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
@@ -206,7 +206,7 @@ export default function Profile() {
 
         <button
           onClick={handleChangePassword}
-          className="w-full py-1.5 rounded-lg bg-green-600 hover:bg-green-700 active:scale-[.98] transition tracking-wide shadow-lg shadow-green-600/30"
+          className="w-full py-1.5 rounded-lg bg-red-800 hover:bg-red-950 active:scale-[.98] transition tracking-wide shadow-lg shadow-red-600/30"
         >
           Change Password
         </button>
