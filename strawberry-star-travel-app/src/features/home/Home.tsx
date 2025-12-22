@@ -1,5 +1,6 @@
 import React from "react";
 import Starfield from "../../components/Starfield";
+import ShootingStars from "../../components/ShootingStars";
 import Strawberry from "../../styles/Strawberry.png";
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
 
   return (
     <main className="relative w-full overflow-x-hidden text-white">
+      <ShootingStars />
       {/* 🌟 Starfield with gradient */}
       <Starfield gradient="from-black via-gray-900 to-rose-950" />
 
