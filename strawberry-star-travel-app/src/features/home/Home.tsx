@@ -29,23 +29,27 @@ export default function Home() {
       {/* Hero section */}
       <section className="relative min-h-screen w-full flex flex-col items-center justify-center px-6 text-center z-10">
         
-        {/* Title (slightly moved upward for space) */}
-        <h1
-          className="
-            font-extrabold tracking-tight text-5xl leading-tight sm:text-6xl md:text-7xl
-            drop-shadow-[0_0_25px_rgba(255,100,200,0.45)]
-            mb-6 pt-8
-
-            bg-linear-to-b from-pink-300 via-fuchsia-400 to-rose-500
-            bg-clip-text text-transparent
-
-            animate-[titleShimmer_4s_ease-in-out_infinite]
-          "
-        >
-          <span className="block">Strawberry</span>
-          <span className="block">Star</span>
-          <span className="block">Travel</span>
-        </h1>
+        <div className="relative inline-block">
+          {/* Lens flare */}
+          <div className="lens-flare" aria-hidden />
+          <h1
+            className="
+              font-extrabold tracking-tight text-5xl leading-tight sm:text-6xl md:text-7xl
+              drop-shadow-[0_0_25px_rgba(255,100,200,0.45)]
+              mb-6 pt-8 text-center relative z-10
+            "
+          >
+            <span className="block depth depth-1 bg-linear-to-b from-rose-700 via-rose-500 to-red-400 bg-clip-text text-transparent">
+              Strawberry
+            </span>
+            <span className="block depth depth-2 bg-linear-to-b from-pink-300 via-white to-zinc-500 bg-clip-text text-transparent">
+              Star
+            </span>
+            <span className="block depth depth-3 bg-linear-to-b from-pink-500 via-fuchsia-400 to-rose-500 bg-clip-text text-transparent">
+              Travel
+            </span>
+          </h1>
+        </div>
 
         {/* 🐱 Strawberry’s cosmic floating avatar */}
         <img
@@ -53,7 +57,7 @@ export default function Home() {
           alt="Strawberry the cat"
           className="
             w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover
-            border-2 border-pink-400 shadow-xl
+            border-2 border-red-500 shadow-xl
             animate-[float_4s_ease-in-out_infinite,glow_3s_ease-in-out_infinite]
             mb-2 mt-6
           "
@@ -143,6 +147,82 @@ export default function Home() {
               filter: drop-shadow(0 0 4px rgba(255, 140, 200, 0.4))
                       drop-shadow(0 0 12px rgba(255, 90, 160, 0.3));
               opacity: 0.95;
+            }
+          }
+          .depth {
+            display: block;
+            will-change: transform;
+          }
+
+          .depth-1 {
+            animation: drift1 10s ease-in-out infinite;
+          }
+
+          .depth-2 {
+            animation: drift2 12s ease-in-out infinite;
+          }
+
+          .depth-3 {
+            animation: drift3 14s ease-in-out infinite;
+          }
+
+          @keyframes drift1 {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(-14px, -10px, 0); }
+          }
+
+          @keyframes drift2 {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(14px, -14px, 0); }
+          }
+
+          @keyframes drift3 {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0px, 16px, 0); }
+          }
+          /* --- Lens flare --- */
+          .lens-flare {
+            position: absolute;
+            top: 50%;
+            left: -60%;
+            width: 220%;
+            height: 14px;
+
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(255, 220, 255, 0.6),
+              rgba(255, 255, 255, 0.9),
+              rgba(255, 220, 255, 0.6),
+              transparent
+            );
+
+            transform: translateY(-50%);
+            opacity: 0;
+            filter: blur(6px);
+            mix-blend-mode: screen;
+
+            animation: lensFlare 7s ease-in-out infinite;
+            pointer-events: none;
+          }
+
+          @keyframes lensFlare {
+            0%, 82% {
+              opacity: 0;
+              transform: translate(-60%, -50%);
+            }
+
+            85% {
+              opacity: 0.8;
+            }
+
+            92% {
+              opacity: 0;
+              transform: translate(60%, -50%);
+            }
+
+            100% {
+              opacity: 0;
             }
           }
         `}
