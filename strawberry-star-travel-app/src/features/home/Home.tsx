@@ -4,6 +4,7 @@ import ShootingStars from "../../components/ShootingStars";
 import Strawberry from "../../styles/Strawberry.png";
 
 export default function Home() {
+  {/* Scroll Hide */}
   const [hideScroll, setHideScroll] = React.useState(false);
 
   React.useEffect(() => {
@@ -19,6 +20,39 @@ export default function Home() {
       window.removeEventListener("mousedown", hide);
     };
   }, []);
+
+  {/* Typewriter Tagline */}
+  const line1 = "Discover real stars.";
+  const line2 = "Remember the ones that call to you.";
+
+  const [typedLine1, setTypedLine1] = React.useState("");
+  const [typedLine2, setTypedLine2] = React.useState("");
+
+  React.useEffect(() => {
+    let i = 0;
+    let j = 0;
+
+    const typeLine1 = setInterval(() => {
+      setTypedLine1(line1.slice(0, i + 1));
+      i++;
+      if (i === line1.length) {
+        clearInterval(typeLine1);
+
+        setTimeout(() => {
+          const typeLine2 = setInterval(() => {
+            setTypedLine2(line2.slice(0, j + 1));
+            j++;
+            if (j === line2.length) {
+              clearInterval(typeLine2);
+            }
+          }, 60);
+        }, 600);
+      }
+    }, 60);
+
+    return () => clearInterval(typeLine1);
+  }, []);
+
 
   return (
     <main className="relative w-full overflow-x-hidden text-white">
@@ -51,6 +85,9 @@ export default function Home() {
           </h1>
         </div>
 
+      {/* Avatar + Tagline group */}
+        <div className="flex flex-col items-center translate-y-12 sm:translate-y-12">
+
         {/* 🐱 Strawberry’s cosmic floating avatar */}
         <img
           src={Strawberry}
@@ -58,27 +95,20 @@ export default function Home() {
           className="
             w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover
             border-2 border-red-500 shadow-xl
-            animate-[float_4s_ease-in-out_infinite,glow_3s_ease-in-out_infinite]
-            mb-2 mt-6
-          "
+            animate-[float_4s_ease-in-out_infinite,glow_3s_ease-in-out_infinite] mb-3"
         />
 
-        {/* Tagline */}
+        {/* Typewriter Tagline */}
         <p
           className="
-            max-w-md sm:max-w-xl text-base sm:text-lg font-semibold italic text-gray-200 min-h-3.5rem
-          "
-        >
-          <span className="tagline-line block">
-            Discover real stars.
-          </span>
-          <span className="tagline-line block delay-1">
-            Remember the ones that call to you.
-          </span>
+            max-w-md sm:max-w-xl text-base sm:text-lg
+            font-semibold italic text-gray-200 min-h-3.5rem mt-6">
+          <span className="block">{typedLine1}</span>
+          <span className="block">{typedLine2}</span>
         </p>
+      </div>
 
-
-        {/* Scroll indicator */}
+        {/* Scroll Indicator */}
         <div
           className={`absolute bottom-6 text-gray-400 text-xs tracking-widest uppercase transition-opacity duration-500 ${
             hideScroll ? "opacity-0" : "opacity-100"
@@ -119,8 +149,10 @@ export default function Home() {
           ].map((card) => (
             <div
               key={card.title}
-              className="relative rounded-2xl bg-gray-900/70 border border-gray-700 p-6 shadow-lg backdrop-blur-sm transition
-              hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(255,100,200,0.15)] hover:border-pink-500/40"
+              className={`relative rounded-2xl bg-gray-900/70 border border-gray-700 p-6 shadow-lg backdrop-blur-sm transition
+              hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(255,100,200,0.15)] hover:border-pink-500/40
+              ${card.title.includes("Star Fact") ? "md:col-span-1 md:col-start-2" : ""}
+              `}
             >
               <div className="absolute inset-0 rounded-2xl pointer-events-none bg-linear-to-br from-pink-500/5 to-transparent opacity-0 hover:opacity-100 transition" />
               <h3 className={`mb-6 text-lg font-bold ${card.color}`}>{card.title}</h3>
@@ -239,22 +271,6 @@ export default function Home() {
 
             100% {
               opacity: 0;
-            }
-          }
-          .tagline-line {
-            opacity: 0;
-            transform: translateY(6px);
-            animation: taglineReveal 1.2s ease-out forwards;
-          }
-
-          .tagline-line.delay-1 {
-              animation-delay: 1.4s;
-          }
-
-          @keyframes taglineReveal {
-              to {
-                opacity: 1;
-                transform: translateY(0);
             }
           }
         `}
