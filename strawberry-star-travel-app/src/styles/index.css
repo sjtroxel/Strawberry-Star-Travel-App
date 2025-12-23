@@ -109,3 +109,6 @@ button:focus-visible {
   50% { opacity: 1; }
 }
 
+footer {
+  text-shadow: 0 0 12px rgba(255, 150, 200, 0.15);
+}

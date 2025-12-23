@@ -64,11 +64,19 @@ export default function Home() {
         />
 
         {/* Tagline */}
-        <p className="max-w-md text-base leading-relaxed text-gray-200 font-semibold italic sm:text-lg sm:max-w-xl">
-          Explore real stars. Save your favorites.
-          <br />
-          One day, plot a journey across the galaxy. 🚀
+        <p
+          className="
+            max-w-md sm:max-w-xl text-base sm:text-lg font-semibold italic text-gray-200 min-h-3.5rem
+          "
+        >
+          <span className="tagline-line block">
+            Discover real stars.
+          </span>
+          <span className="tagline-line block delay-1">
+            Remember the ones that call to you.
+          </span>
         </p>
+
 
         {/* Scroll indicator */}
         <div
@@ -88,25 +96,33 @@ export default function Home() {
               title: "🔭 Real Astronomy",
               color: "text-yellow-300",
               text:
-                "Browse real stars with accurate distances, classifications, and scientific context.",
+                "Explore real stars with accurate distances, classifications, and science-backed data.",
             },
             {
-              title: "💖 Favorite Destinations",
+              title: "💖 Save Your Stars",
               color: "text-pink-300",
               text:
-                "Save up to ten stars as potential destinations for your future interstellar journey.",
+                "Build a personal shortlist of stars that fascinate you — future destinations, remembered forever.",
             },
             {
-              title: "🌌 Galactic Map",
+              title: "🌌 Galactic Perspective",
               color: "text-indigo-300",
               text:
-                "Coming soon: visualize your favorite stars on an interactive galactic map.",
+                "See how your favorite stars fit into the wider galaxy. A bigger picture is coming.",
             },
+            {
+              title: "⭐ Star Fact of the Day",
+              color: "text-rose-300",
+              text:
+                "Did you know? Light from some stars you see tonight began its journey before human civilization existed.",
+            }
           ].map((card) => (
             <div
               key={card.title}
-              className="rounded-2xl bg-gray-900/80 border border-gray-700 p-6 shadow-lg transition hover:-translate-y-2 hover:shadow-2xl hover:border-pink-500/40"
+              className="relative rounded-2xl bg-gray-900/70 border border-gray-700 p-6 shadow-lg backdrop-blur-sm transition
+              hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(255,100,200,0.15)] hover:border-pink-500/40"
             >
+              <div className="absolute inset-0 rounded-2xl pointer-events-none bg-linear-to-br from-pink-500/5 to-transparent opacity-0 hover:opacity-100 transition" />
               <h3 className={`mb-6 text-lg font-bold ${card.color}`}>{card.title}</h3>
               <p className="text-sm text-gray-300 pt-2 leading-relaxed">{card.text}</p>
             </div>
@@ -115,7 +131,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-s text-gray-400 z-10">
+      <footer className="py-8 text-center text-lg text-gray-200 font-semibold z-10">
         © {new Date().getFullYear()} sjtroxel. All rights reserved.
       </footer>
 
@@ -223,6 +239,22 @@ export default function Home() {
 
             100% {
               opacity: 0;
+            }
+          }
+          .tagline-line {
+            opacity: 0;
+            transform: translateY(6px);
+            animation: taglineReveal 1.2s ease-out forwards;
+          }
+
+          .tagline-line.delay-1 {
+              animation-delay: 1.4s;
+          }
+
+          @keyframes taglineReveal {
+              to {
+                opacity: 1;
+                transform: translateY(0);
             }
           }
         `}
