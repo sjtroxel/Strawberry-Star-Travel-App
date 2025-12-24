@@ -81,9 +81,43 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* Right Side - Mobile Avatar & Menu */}
-        <div className="flex items-center gap-3 ml-auto">
+    {/* Right Side */}
+    <div className="flex items-center gap-3 ml-auto">
 
+      {/* LOGGED OUT → show buttons */}
+      {!user && (
+        <div className="flex items-center gap-1">
+          <Link
+            to="/login"
+            className="
+              px-3 py-1.5 rounded-full font-semibold text-sm
+              bg-linear-to-r from-blue-800 to-cyan-700
+              text-white
+              shadow-[0_0_16px_rgba(255,120,200,0.6)]
+              hover:scale-105 transition-transform
+            "
+          >
+           Log In
+          </Link>
+
+          <Link
+            to="/signup"
+            className="
+              px-3 py-1.5 rounded-full font-semibold text-sm
+              bg-linear-to-r from-pink-800 to-rose-800
+              text-white
+              shadow-[0_0_16px_rgba(255,120,200,0.6)]
+              hover:scale-105 transition-transform
+            "
+          >
+          Sign Up
+          </Link>
+        </div>
+      )}
+
+      {/* LOGGED IN → avatar + hamburger */}
+      {user && (
+        <>
           {/* Mobile avatar — does NOT spin */}
           <img
             src={avatar || Strawberry}
@@ -94,7 +128,7 @@ export default function Navbar() {
             "
           />
 
-          {/* Hamburger icon — cosmic glow + spin */}
+          {/* Hamburger icon */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menu"
@@ -109,8 +143,10 @@ export default function Navbar() {
           >
             {menuOpen ? "✕" : "☰"}
           </button>
-        </div>
-      </div>
+        </>
+      )}
+    </div>
+</div>
 
       {/* Mobile Menu — Cosmic Panel + glow + shimmer */}
       {menuOpen && (
