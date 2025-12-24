@@ -58,7 +58,7 @@ export default function Home() {
     <main className="relative w-full overflow-x-hidden text-white">
       <ShootingStars />
       {/* 🌟 Starfield with gradient */}
-      <Starfield gradient="from-black via-gray-900 to-rose-950" />
+      <Starfield gradient="from-black via-gray-950 to-rose-950" />
 
       {/* Hero section */}
       <section className="relative min-h-screen w-full flex flex-col items-center justify-center px-6 text-center z-10">
@@ -70,7 +70,7 @@ export default function Home() {
             className="
               font-extrabold tracking-tight text-5xl leading-tight sm:text-6xl md:text-7xl
               drop-shadow-[0_0_25px_rgba(255,100,200,0.45)]
-              mb-6 pt-8 text-center relative z-10
+              mb-6 pt-12 text-center relative z-10
             "
           >
             <span className="block depth depth-1 bg-linear-to-b from-rose-700 via-rose-500 to-red-400 bg-clip-text text-transparent">
@@ -86,7 +86,7 @@ export default function Home() {
         </div>
 
       {/* Avatar + Tagline group */}
-        <div className="flex flex-col items-center translate-y-12 sm:translate-y-12">
+        <div className="flex flex-col items-center translate-y-9 sm:translate-y-12">
 
         {/* 🐱 Strawberry’s cosmic floating avatar */}
         <img
@@ -95,7 +95,7 @@ export default function Home() {
           className="
             w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover
             border-2 border-red-500 shadow-xl
-            animate-[float_4s_ease-in-out_infinite,glow_3s_ease-in-out_infinite] mb-3"
+            animate-[float_4s_ease-in-out_infinite,glow_3s_ease-in-out_infinite] mb-2"
         />
 
         {/* Typewriter Tagline */}
@@ -106,11 +106,29 @@ export default function Home() {
           <span className="block">{typedLine1}</span>
           <span className="block">{typedLine2}</span>
         </p>
+
+        {/* Primary CTA */}
+        <div className="mt-5 flex flex-col items-center gap-4">
+          <a
+            href="/signup"
+            className="
+              px-6 py-2 rounded-full font-bold text-sm sm:text-base
+              bg-linear-to-r from-pink-700 via-rose-700 to-fuchsia-700
+              text-zinc-300 shadow-[0_0_20px_rgba(255,120,200,0.6)]
+              hover:scale-105 active:scale-100 transition-transform
+            "
+          >
+            Begin Your Journey
+          </a>
+          <span className="text-xs font-semibold sm:text-sm text-lime-100 italic">
+            Sign up for free to explore stars and unlock features!
+          </span>
+        </div>
       </div>
 
         {/* Scroll Indicator */}
         <div
-          className={`absolute bottom-6 text-gray-400 text-xs tracking-widest uppercase transition-opacity duration-500 ${
+          className={`absolute bottom-6 text-gray-200 text-xs tracking-widest uppercase transition-opacity duration-500 ${
             hideScroll ? "opacity-0" : "opacity-100"
           }`}
         >
