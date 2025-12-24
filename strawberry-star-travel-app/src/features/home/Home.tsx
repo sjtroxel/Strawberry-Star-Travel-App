@@ -3,7 +3,19 @@ import Starfield from "../../components/Starfield";
 import ShootingStars from "../../components/ShootingStars";
 import Strawberry from "../../styles/Strawberry.png";
 
+
+
 export default function Home() {
+
+  {/* "Locked" Feature Teaser Modal */}
+  const [lockedFeature, setLockedFeature] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!lockedFeature) return;
+    const t = setTimeout(() => setLockedFeature(null), 2500);
+    return () => clearTimeout(t);
+  }, [lockedFeature]);
+
   {/* Scroll Hide */}
   const [hideScroll, setHideScroll] = React.useState(false);
 
@@ -52,7 +64,6 @@ export default function Home() {
 
     return () => clearInterval(typeLine1);
   }, []);
-
 
   return (
     <main className="relative w-full overflow-x-hidden text-white">
@@ -138,7 +149,13 @@ export default function Home() {
 
       {/* Features */}
       <section className="relative w-full py-28 z-10">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 gap-10 md:grid-cols-3">
+
+      {/* 2a — one-line explanation ABOVE the grid */}
+      <p className="text-center text-sm font-semibold text-sky-200 italic mb-10 pb-6">
+        Unlock the below features by creating a free account!
+      </p>
+
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 gap-7 md:grid-cols-3">
           {[
             {
               title: "🔭 Real Astronomy",
@@ -167,11 +184,22 @@ export default function Home() {
           ].map((card) => (
             <div
               key={card.title}
+              onClick={() => setLockedFeature(card.title)}
               className={`relative rounded-2xl bg-gray-900/70 border border-gray-700 p-6 shadow-lg backdrop-blur-sm transition
               hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(255,100,200,0.15)] hover:border-pink-500/40
               ${card.title.includes("Star Fact") ? "md:col-span-1 md:col-start-2" : ""}
               `}
             >
+            {/* 2b — THIS is the small modal, INSIDE the card */}
+            {lockedFeature === card.title && (
+              <div
+                className="absolute -top-4 left-1/2 -translate-x-1/2
+                  bg-black/90 text-amber-100 text-xs font-face
+                  px-3 py-1 rounded-full shadow-lg animate-fadeIn
+                  pointer-events-none">
+                Create a free account to use this feature!
+              </div>
+            )}
               <div className="absolute inset-0 rounded-2xl pointer-events-none bg-linear-to-br from-pink-500/5 to-transparent opacity-0 hover:opacity-100 transition" />
               <h3 className={`mb-6 text-lg font-bold ${card.color}`}>{card.title}</h3>
               <p className="text-sm text-gray-300 pt-2 leading-relaxed">{card.text}</p>
@@ -179,6 +207,26 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Post-features CTA */}
+      <div className="relative z-10 py-20 flex flex-col items-center gap-4">
+        <p className="text-lg font-semibold text-gray-200">
+          Ready to explore for real?
+        </p>
+
+        <a
+          href="/signup"
+          className="px-6 py-2 rounded-full font-bold text-sm sm:text-base
+            bg-linear-to-r from-blue-800 to-cyan-700
+            text-white
+            shadow-[0_0_24px_rgba(255,120,200,0.6)]
+            hover:scale-105 transition-transform
+          "
+        >
+          Create Free Account
+        </a>
+      </div>
+
 
       {/* Footer */}
       <footer className="py-8 text-center text-lg text-gray-200 font-semibold z-10">
