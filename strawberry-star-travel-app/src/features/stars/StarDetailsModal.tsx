@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import type { Star } from "./Star";
 import { spectralExplanation, estimateTemperature, travelTimeLy } from "./utils/astronomy";
 import type { WikipediaSummary } from "./types/Wikipedia"; 
+import { getConstellationName } from "./utils/constellation";
 
 interface StarDetailsModalProps {
   star: Star;
@@ -53,7 +54,7 @@ export default function StarDetailsModal({ star, anchorRect, onClose, wikiData }
         <li><span className="font-semibold text-cyan-300">Designation:</span> {star.designation}</li>
         <li><span className="font-semibold text-cyan-300">Spectral Type:</span> {star.spectralType}</li>
         <li><span className="font-semibold text-cyan-300">Distance:</span> {distanceLy.toFixed(2)} ly ({distancePc.toFixed(2)} pc)</li>
-        <li><span className="font-semibold text-cyan-300">Constellation:</span> {star.constellation}</li>
+        <li><span className="font-semibold text-cyan-300">Constellation:</span> {getConstellationName(star.constellation)}</li>
         <li><span className="font-semibold text-cyan-300">Apparent Magnitude:</span> {star.apparentMagnitude}</li>
       </ul>
 

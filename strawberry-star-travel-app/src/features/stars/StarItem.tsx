@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import type { Star } from "./Star";
 import { useWikipediaSummary } from "./hooks/useWikipediaSummary";
 import StarDetailsModal from "./StarDetailsModal";
+import { getConstellationName } from "./utils/constellation";
 
 interface StarItemProps {
   star: Star;
@@ -86,7 +87,7 @@ export default function StarItem({ star, favorites }: StarItemProps) {
           </li>
           <li>
             <span className="font-semibold text-slate-300">Constellation:</span>{" "}
-            {star.constellation}
+            {getConstellationName(star.constellation)}
           </li>
           <li>
             <span className="font-semibold text-slate-300">

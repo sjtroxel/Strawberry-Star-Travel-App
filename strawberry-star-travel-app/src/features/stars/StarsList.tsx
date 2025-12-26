@@ -2,6 +2,7 @@ import { useStars } from "../../hooks/useStars";
 import StarItem from "./StarItem";
 import { useFavorites } from "../../hooks/useFavorites";
 import Starfield from "../../components/Starfield";
+import { Constellations } from "./data/constellations";
 
 export default function StarsList() {
   const {
@@ -17,7 +18,6 @@ export default function StarsList() {
 
     // option lists
     spectralTypes,
-    constellations,
     magnitudeOptions,
 
     // sorting
@@ -103,8 +103,10 @@ export default function StarsList() {
             "
           >
             <option value="">All Constellations</option>
-            {constellations.map((c) => (
-              <option key={c} value={c}>{c}</option>
+            {Object.entries(Constellations).map(([abbr, fullName]) => (
+              <option key={abbr} value={abbr}>
+                {fullName}
+              </option>
             ))}
           </select>
 

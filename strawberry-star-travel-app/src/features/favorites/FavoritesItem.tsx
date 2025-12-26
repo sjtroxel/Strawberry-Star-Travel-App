@@ -4,6 +4,7 @@ import StarDetailsModal from "../stars/StarDetailsModal";
 import ConfirmRemoveModal from "../../components/ConfirmRemoveModal";
 // import { useFavorites } from "../../hooks/useFavorites";
 import { useWikipediaSummary } from "../stars/hooks/useWikipediaSummary";
+import { getConstellationName } from "../stars/utils/constellation";
 
 interface FavoritesItemProps {
   star: Star;
@@ -86,7 +87,7 @@ export default function FavoritesItem({ star, removeFavorite }: FavoritesItemPro
           </li>
           <li>
             <span className="font-semibold text-[#a18be0]">Constellation:</span>{" "}
-            {star.constellation}
+            {getConstellationName(star.constellation)}
           </li>
           <li>
             <span className="font-semibold text-[#a18be0]">Apparent Magnitude:</span>{" "}
