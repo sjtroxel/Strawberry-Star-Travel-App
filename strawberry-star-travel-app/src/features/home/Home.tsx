@@ -2,7 +2,7 @@ import React from "react";
 import Starfield from "../../components/Starfield";
 import ShootingStars from "../../components/ShootingStars";
 import Strawberry from "../../styles/Strawberry.png";
-
+import { Star_Facts } from "../stars/data/starFacts";
 
 
 export default function Home() {
@@ -63,6 +63,14 @@ export default function Home() {
     }, 60);
 
     return () => clearInterval(typeLine1);
+  }, []);
+
+  {/* Star Facts */}
+  const [starFact, setStarFact] = React.useState("");
+
+  React.useEffect(() => {
+    const index = Math.floor(Math.random() * Star_Facts.length);
+    setStarFact(Star_Facts[index]);
   }, []);
 
   return (
@@ -151,9 +159,19 @@ export default function Home() {
       <section className="relative w-full py-28 z-10">
 
       {/* 2a — one-line explanation ABOVE the grid */}
-      <p className="text-center text-sm font-semibold text-sky-200 italic mb-10 pb-6">
-        Unlock the below features by creating a free account!
-      </p>
+      <div className="flex justify-center mb-8">
+        <p
+          className="
+            inline-block text-xs font-semibold italic text-sky-200
+            px-4 py-2 rounded-full
+            bg-black/40 border border-sky-400/30
+            backdrop-blur-sm
+            shadow-[0_0_12px_rgba(100,200,255,0.15)]
+          "
+        >
+          Unlock the below features by creating a free account!
+        </p>
+      </div>
 
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 gap-7 md:grid-cols-3">
           {[
@@ -178,8 +196,7 @@ export default function Home() {
             {
               title: "⭐ Star Fact of the Day",
               color: "text-rose-300",
-              text:
-                "Did you know? Light from some stars you see tonight began its journey before human civilization existed.",
+              text: starFact,
             }
           ].map((card) => (
             <div
