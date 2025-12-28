@@ -121,13 +121,13 @@ export default function Home() {
         <p
           className="
             max-w-md sm:max-w-xl text-base sm:text-lg
-            font-semibold italic text-gray-200 min-h-3.5rem mt-6">
+            font-semibold italic text-gray-100 min-h-3.5rem mt-6">
           <span className="block">{typedLine1}</span>
           <span className="block">{typedLine2}</span>
         </p>
 
         {/* Primary CTA */}
-        <div className="mt-5 flex flex-col items-center gap-4">
+        <div className="mt-5 flex flex-col items-center gap-5">
           <a
             href="/signup"
             className="
@@ -139,9 +139,19 @@ export default function Home() {
           >
             Begin Your Journey
           </a>
-          <span className="text-xs font-semibold sm:text-sm text-lime-100 italic">
-            Sign up for free to explore stars and unlock features!
-          </span>
+          <div className="flex justify-center mb-8">
+            <p
+              className="
+                inline-block text-xs font-semibold italic text-slate-100
+                px-4 py-1.5 rounded-full
+                bg-black/30 border border-sky-400/30
+                backdrop-blur-sm
+                shadow-[0_0_12px_rgba(100,200,255,0.15)]
+              "
+            >
+              Sign up for free to explore stars and unlock features!
+            </p>
+          </div>
         </div>
       </div>
 
@@ -159,12 +169,12 @@ export default function Home() {
       <section className="relative w-full py-28 z-10">
 
       {/* 2a — one-line explanation ABOVE the grid */}
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-6">
         <p
           className="
             inline-block text-xs font-semibold italic text-sky-200
-            px-4 py-2 rounded-full
-            bg-black/40 border border-sky-400/30
+            px-4 py-1.5 rounded-full
+            bg-black/30 border border-sky-400/30
             backdrop-blur-sm
             shadow-[0_0_12px_rgba(100,200,255,0.15)]
           "
@@ -173,7 +183,7 @@ export default function Home() {
         </p>
       </div>
 
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 gap-7 md:grid-cols-3">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 gap-6 md:grid-cols-3">
           {[
             {
               title: "🔭 Real Astronomy",
