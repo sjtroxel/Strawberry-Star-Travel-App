@@ -11,10 +11,7 @@ interface UserContextType {
 }
 
 // Create the context with proper typing (no "any")
-const UserContext = createContext<UserContextType>({
-  user: null,
-  loading: true,
-});
+const UserContext = createContext<UserContextType | null>(null);
 
 // This is a component, so Fast Refresh is happy
 function UserProvider({ children }: { children: ReactNode }) {
