@@ -3,7 +3,7 @@ import type { Star } from "../stars/Star";
 import StarDetailsModal from "../stars/StarDetailsModal";
 import ConfirmRemoveModal from "../../components/ConfirmRemoveModal";
 // import { useFavorites } from "../../hooks/useFavorites";
-import { useWikipediaSummary } from "../stars/hooks/useWikipediaSummary";
+import { useWikipediaSummary } from "../../hooks/useWikipediaSummary";
 import { getConstellationName } from "../stars/utils/constellation";
 
 interface FavoritesItemProps {

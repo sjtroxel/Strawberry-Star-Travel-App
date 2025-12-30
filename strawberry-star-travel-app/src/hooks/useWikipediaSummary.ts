@@ -1,7 +1,7 @@
 import React from "react";
-import { fetchStarWikipediaSummary } from "../services/wikipedia";
-import type { WikipediaSummary } from "../types/Wikipedia";
-import type { Star } from "../Star";
+import { fetchStarWikipediaSummary } from "../features/stars/services/wikipedia";
+import type { WikipediaSummary } from "../features/stars/types/Wikipedia";
+import type { Star } from "../features/stars/Star";
 
 export function useWikipediaSummary(star: Star) {
   const [data, setData] = React.useState<WikipediaSummary | null>(null);

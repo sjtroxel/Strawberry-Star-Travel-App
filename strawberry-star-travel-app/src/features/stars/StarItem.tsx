@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import type { Star } from "./Star";
-import { useWikipediaSummary } from "./hooks/useWikipediaSummary";
+import { useWikipediaSummary } from "../../hooks/useWikipediaSummary";
 import StarDetailsModal from "./StarDetailsModal";
 import { getConstellationName } from "./utils/constellation";
 
