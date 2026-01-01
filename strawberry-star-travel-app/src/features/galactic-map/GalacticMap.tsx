@@ -1,12 +1,14 @@
 import Starfield from "../../components/Starfield";
 import PingFoot from "../../styles/PingFoot.png";
+import FavoritesCarousel from "../favorites/FavoritesCarousel";
 
 export default function GalacticMap() {
   return (
+    <>
     <div className="relative min-h-screen w-full flex items-center justify-center px-4 py-10 text-white overflow-hidden">
       {/* Deep forest-green starfield background */}
       <Starfield gradient="from-black via-green-950 to-emerald-200" />
-
+      
       {/* Content container */}
       <div className="z-10 flex flex-col items-center text-center mt-10">
        
@@ -33,5 +35,7 @@ export default function GalacticMap() {
         </h2>
       </div>
     </div>
+    <FavoritesCarousel />
+    </>
   );
 }
