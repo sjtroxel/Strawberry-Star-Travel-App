@@ -4,7 +4,6 @@ import ShootingStars from "../../components/ShootingStars";
 import Strawberry from "../../styles/Strawberry.png";
 import { Star_Facts } from "../stars/data/starFacts";
 
-
 export default function Home() {
 
   {/* "Locked" Feature Teaser Modal */}

@@ -1,6 +1,6 @@
 import Starfield from "../../components/Starfield";
 import PingFoot from "../../styles/PingFoot.png";
-import FavoritesCarousel from "../favorites/FavoritesCarousel";
+// import FavoritesCarousel from "../favorites/FavoritesCarousel";
 
 export default function GalacticMap() {
   return (
@@ -35,7 +35,7 @@ export default function GalacticMap() {
         </h2>
       </div>
     </div>
-    <FavoritesCarousel />
+    {/* <FavoritesCarousel /> */}
     </>
   );
 }
