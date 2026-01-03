@@ -2,7 +2,9 @@ import React from "react";
 import Starfield from "../../components/Starfield";
 import ShootingStars from "../../components/ShootingStars";
 import Strawberry from "../../styles/Strawberry.png";
-import { Star_Facts } from "../stars/data/starFacts";
+// import { Star_Facts } from "../stars/data/starFacts";
+// import { homeFeatures } from "./data/homeFeatures";
+import HomeCarousel from "./components/HomeCarousel";
 
 export default function Home() {
 
@@ -65,12 +67,12 @@ export default function Home() {
   }, []);
 
   {/* Star Facts */}
-  const [starFact, setStarFact] = React.useState("");
+  // const [starFact, setStarFact] = React.useState("");
 
-  React.useEffect(() => {
-    const index = Math.floor(Math.random() * Star_Facts.length);
-    setStarFact(Star_Facts[index]);
-  }, []);
+  // React.useEffect(() => {
+  //   const index = Math.floor(Math.random() * Star_Facts.length);
+  //   setStarFact(Star_Facts[index]);
+  // }, []);
 
   return (
     <main className="relative w-full overflow-x-hidden text-white">
@@ -182,56 +184,11 @@ export default function Home() {
         </p>
       </div>
 
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {[
-            {
-              title: "🔭 Real Astronomy",
-              color: "text-yellow-300",
-              text:
-                "Explore real stars with accurate distances, classifications, and science-backed data.",
-            },
-            {
-              title: "💖 Save Your Stars",
-              color: "text-pink-300",
-              text:
-                "Build a personal shortlist of stars that fascinate you — future destinations, remembered forever.",
-            },
-            {
-              title: "🌌 Galactic Perspective",
-              color: "text-indigo-300",
-              text:
-                "See how your favorite stars fit into the wider galaxy. A bigger picture is coming.",
-            },
-            {
-              title: "⭐ Star Fact of the Day",
-              color: "text-rose-300",
-              text: starFact,
-            }
-          ].map((card) => (
-            <div
-              key={card.title}
-              onClick={() => setLockedFeature(card.title)}
-              className={`relative rounded-2xl bg-gray-900/70 border border-gray-700 p-6 shadow-lg backdrop-blur-sm transition
-              hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(255,100,200,0.15)] hover:border-pink-500/40
-              ${card.title.includes("Star Fact") ? "md:col-span-1 md:col-start-2" : ""}
-              `}
-            >
-            {/* 2b — THIS is the small modal, INSIDE the card */}
-            {lockedFeature === card.title && (
-              <div
-                className="absolute -top-4 left-1/2 -translate-x-1/2
-                  bg-black/90 text-amber-100 text-xs font-face
-                  px-3 py-1 rounded-full shadow-lg animate-fadeIn
-                  pointer-events-none">
-                Create a free account to use this feature!
-              </div>
-            )}
-              <div className="absolute inset-0 rounded-2xl pointer-events-none bg-linear-to-br from-pink-500/5 to-transparent opacity-0 hover:opacity-100 transition" />
-              <h3 className={`mb-6 text-lg font-bold ${card.color}`}>{card.title}</h3>
-              <p className="text-sm text-gray-300 pt-2 leading-relaxed">{card.text}</p>
-            </div>
-          ))}
-        </div>
+      <div className="mt-12 flex justify-center">
+        <HomeCarousel
+          onFeatureClick={(title) => setLockedFeature(title)}
+        />
+      </div>
       </section>
 
       {/* Post-features CTA */}
@@ -284,6 +241,18 @@ export default function Home() {
        . All rights reserved.
       </footer>
 
+    {lockedFeature && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="bg-black/70 backdrop-blur-sm rounded-xl px-6 py-4 border border-pink-400/40 shadow-xl text-center animate-fadeIn">
+          <p className="text-lg font-bold text-pink-300 mb-1">
+            {lockedFeature}
+          </p>
+          <p className="text-sm text-gray-200 italic">
+            This feature unlocks when you create a free account!
+          </p>
+        </div>
+      </div>
+    )}
 
       {/* Custom keyframes */}
       <style>

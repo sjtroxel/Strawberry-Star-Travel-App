@@ -10,12 +10,13 @@ export default function HomeFeatureCard({ feature, onClick }: Props) {
     <button
       onClick={onClick}
       className="
-        relative w-72 h-40 rounded-xl
+        relative w-[80vw] max-w-[18rem] h-38 rounded-xl
+        overflow-hidden
         bg-white/10 backdrop-blur-xl
-        border border-cyan-400/20
+        border-3 border-cyan-400/20
         shadow-lg text-left
         p-4 text-white
-        hover:scale-105 transition
+        hover:scale-105 transition-transform
       "
     >
       <div className="text-3xl mb-2">{feature.icon}</div>
