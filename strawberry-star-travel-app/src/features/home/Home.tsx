@@ -173,7 +173,7 @@ export default function Home() {
       <div className="flex justify-center mb-6">
         <p
           className="
-            inline-block text-xs font-semibold italic text-sky-200
+            inline-block text-xs font-semibold italic text-sky-100
             px-4 py-1.5 rounded-full
             bg-black/30 border border-sky-400/30
             backdrop-blur-sm
@@ -184,7 +184,7 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="mt-12 flex justify-center">
+      <div className="mt-8 flex justify-center">
         <HomeCarousel
           onFeatureClick={(title) => setLockedFeature(title)}
         />

@@ -28,7 +28,7 @@ export const homeFeatures: HomeFeature[] = [
     id: "wikipedia",
     title: "Star Lore",
     description: "Learn myths, science, and facts about stars.",
-    icon: "📚",
+    icon: "📜",
   },
   {
     id: "missions",
